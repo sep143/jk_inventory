@@ -8,19 +8,19 @@
             <div class="box-body">
                     <div  class="row" >
                         <div class="col-md-12">
-                             <?= $this->Form->create($stock_register,['autocomplete'=>'off','id'=>'ServiceForm','type'=>'GET']) ?>
+                             <?= $this->Form->create($stock_register,['autocomplete'=>'off','id'=>'ServiceForm']) ?>
                                 <div class="row">
                                      <div class="col-sm-4">
-                                        <label class="control-label"> Material</label>
-                                        <?php echo $this->Form->control('row_material_id', ['options' =>$rowMaterials, 'empty' =>'Select Material','label'=>false,'class'=>'select2','style'=>'width:100%;','required']);?>
+                                        <label class="control-label"> Row Material</label>
+                                        <?php echo $this->Form->control('data[row_material_id]', ['options' =>$rowMaterials, 'empty' =>'Select Material','label'=>false,'class'=>'select2','style'=>'width:100%;','required']);?>
                                     </div>
                                     <div class="col-sm-3">
                                         <label class="control-label"> Date From </label>
-                                        <?= $this->Form->control('from',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>@$_POST['data']['transaction_date >=']])?>
+                                        <?= $this->Form->control('data[transaction_date >=]',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>@$_POST['data']['transaction_date >=']])?>
                                     </div>
                                     <div class="col-sm-3">
                                         <label class="control-label"> Date To </label>
-                                        <?= $this->Form->control('to',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>@$_POST['data']['transaction_date <=']])?>
+                                        <?= $this->Form->control('data[transaction_date <=]',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>@$_POST['data']['transaction_date <=']])?>
                                     </div>
                                      <div class="col-sm-1 ">
                                        <?= $this->Form->submit('SEARCH',['class'=>'btn btn-info btnClass','style'=>'margin-top:28px;','id'=>'submit_member'])?>

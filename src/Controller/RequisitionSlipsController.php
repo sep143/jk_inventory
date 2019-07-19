@@ -26,35 +26,42 @@ class RequisitionSlipsController extends AppController
     public function file()
     {
         $user_id = $this->Auth->User('id');
-		$department_id=$this->Auth->User('department_id');
         $new=$this->RequisitionSlips->RequisitionSlipRows->newEntity();
-        //$requisitionSlip = $this->RequisitionSlips->newEntity();
-        
-          if($this->request->is(['post']))
+
+        $url=$this->request->here();
+            $url=parse_url($url,PHP_URL_QUERY);
+            $status=$this->request->query('status'); 
+        if(!empty($status)){ 
+            $this->viewBuilder()->layout('excel_layout');	
+        }
+
+            $row_id = $this->request->query('row_material_id');
+            $from=$this->request->query('from');
+            $to=$this->request->query('to');
+
+            $where=[];$where1=[];
+            if(!empty($from)){
+                 $where['RequisitionSlips.transaction_date >='] = date('Y-m-d', strtotime($from));
+
+            }
+            if(!empty($to)){
+                 $where['RequisitionSlips.transaction_date <='] = date('Y-m-d', strtotime($to));
+
+            }
+
+            if(!empty($row_id)){
+                 $where1['RequisitionSlipRows.row_material_id'] = $row_id;
+
+            }
+           
+        if(!empty($where) || !empty($where1)){    
+
+        $requisitionSlip=$this->RequisitionSlips->RequisitionSlipRows->find()->where($where1)
+        ->contain(['RequisitionSlips','RowMaterials']);
+        foreach($requisitionSlip as $req)
         {
-            $datas = $this->request->getData('data');
-            $row_id=$datas['row_material_id'];
-            $from=$datas['from'];
-            $to=$datas['to'];
-			
-			$where=[];
-			if(!empty($from)){
-				$where['RequisitionSlips.transaction_date >='] = date('Y-m-d', strtotime($from));
-			
-			}
-			if(!empty($to)){
-				$where['RequisitionSlips.transaction_date <='] = date('Y-m-d', strtotime($to));
-			
-			}
-			
-        $requisitionSlip=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->get($row_id,
-			['contain'=> ['RequisitionSlipRows'=>['RequisitionSlips'=>function ($q) use($where){
-				return $q->where($where);
-			}]]]);
-			
-			
-		 $row_material_id=$row_id;
-            
+            $row_material_id=$req->row_material_id;
+            $department_id=$this->Auth->User('department_id');
             $query=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->find();
             
              $row_material_list = $query
@@ -76,24 +83,22 @@ class RequisitionSlipsController extends AppController
                         'total_out' => $query->func()->sum($totalOutCase),'id','row_material_id'
                       ])
                       //->group('row_material_id')
-                      ->enableAutoFields(true);
-					  
+                      ->enableAutoFields(true); 
                 }]);
-				
-				
-			//	pr($row_material_list->toArray());exit;
                 
-                    $returns=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->ReturnSlipRows->find()->where(['row_material_id'=>$row_id])->contain(['ReturnSlips']);
+                    $returns=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->ReturnSlipRows->find()->where(['row_material_id'=>$row_material_id])->contain(['ReturnSlips']);
                            
        
-       
         }
+    }
         //  
         $rowMaterials=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->find('list');
-       
-        $this->set(compact('requisitionSlip','row_material_list','returns','rowMaterials','new'));
+        $companies=$this->RequisitionSlips->Companies->get(1,['contain'=> ['States']]);
+        $this->set(compact('requisitionSlip','row_material_list','returns','rowMaterials','new','url','status','companies'));
     }
-     
+
+
+    
     public function index($value='')
     {
          
@@ -133,7 +138,8 @@ class RequisitionSlipsController extends AppController
         }//$requisitionSlips = $this->paginate($this->RequisitionSlips->find()->where(['RequisitionSlips.is_deleted'=>'0']));
         //pr($requisitionSlips->toarray());exit;
         //$empfff = $this->RequisitionSlips->Creaters->find('list')->where(['Creaters.is_deleted'=>'0']);
-        $this->set(compact('requisitionSlips','empfff','requisition_data','data_exist'));
+        $companies=$this->RequisitionSlips->Companies->get(1,['contain'=> ['States']]);
+        $this->set(compact('requisitionSlips','empfff','requisition_data','data_exist','companies'));
     }
     
     /**
@@ -409,7 +415,8 @@ class RequisitionSlipsController extends AppController
         }
        // pr($requisitionSlips->toArray());exit;
         $empfff = $this->RequisitionSlips->Creaters->find('list')->where(['Creaters.is_deleted'=>'0','Creaters.role_id'=>'4']);
-        $this->set(compact('requisitionSlips','empfff','requisition_data','data_exist'));
+        $companies=$this->RequisitionSlips->Companies->get(1,['contain'=> ['States']]);
+        $this->set(compact('requisitionSlips','empfff','requisition_data','data_exist','companies'));
     }
      public function reqslipList()
     {

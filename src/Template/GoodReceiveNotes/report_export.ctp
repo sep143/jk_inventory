@@ -4,6 +4,28 @@
  * @var \App\Model\Entity\BookIssueReturn[]|\Cake\Collection\CollectionInterface $bookIssueReturns
  */
 ?>
+<?php
+if($status=='excel'){
+// $date= date("d-m-Y"); 
+// $time=date('h:i:a',time());
+
+// $filename="Department_stock_".$date.'_'.$time;
+// $from_date=date('d-m-Y',strtotime($from_date));
+// $to_date=date('d-m-Y',strtotime($to_date));
+
+// header ("Expires: 0");
+// header ("Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT");
+// header ("Cache-Control: no-cache, must-revalidate");
+// header ("Pragma: no-cache");
+// header ("Content-type: application/vnd.ms-excel");
+// header ("Content-Disposition: attachment; filename=".$filename.".xls");
+// header ("Content-Description: Generated Report" ); 
+// echo '<table border="1"><tr style="font-size:14px;"><td colspan="14" align="center" style="text-align:center;">'.$companies->name .'<br/>' .$companies->address .',<br/>'. $companies->state->name .'</span><br/>
+// <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
+// $companies->gstin .'</span></td></tr></table>';
+}
+
+ ?>
 
 <section class="content">
     <div class="row">
@@ -30,6 +52,11 @@
                     </div>
                      <table id="example1" class="table table-bordered table-striped" style="border-collapse:collapse;">
                        <thead>
+                       <?php
+                       echo '<tr style="font-size:14px;"><td colspan="14" align="center" style="text-align:center;">'.$companies->name .'<br/>' .$companies->address .',<br/>'. $companies->state->name .'</span><br/>
+                       <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
+                       $companies->gstin .'</span></td></tr>';
+                       ?>
                             <tr>
                                 <th scope="col"><?= ('Sr.No') ?></th>
                                 <th scope="col"><?= ('Date') ?></th>
@@ -42,7 +69,7 @@
                                 <th scope="col"><?= ('Quantity') ?></th>
                                 <th scope="col"><?= ('Received By') ?></th>
                                 <th scope="col"><?= ('Inspection Remarks') ?></th>
-                                 <th scope="col"><?= ('Inspection By') ?></th>
+                                <th scope="col"><?= ('Inspection By') ?></th>
                                 <th scope="col"><?= ('Rate') ?></th>
                                 <th scope="col"><?= ('Amount') ?></th>
                             </tr>
@@ -58,7 +85,6 @@
                                 <td><?= h($goodReceiveNote->bill_no) ?></td>
                                 <td>
                                     <?= h($goodReceiveNote->purchase_order->voucher_no) ?></a>
-
                                 </td>
                                  <td><?= h($goodReceiveNote->transport) ?></td>
                                  <td><?= h($goodReceiveNote->purchase_order->vendor->name) ?></td>

@@ -59,9 +59,9 @@ class IssueSlipsController extends AppController
       
         }
 
-        
+        $companies=$this->IssueSlips->Companies->get(1,['contain'=> ['States']]);
         $employees = $this->IssueSlips->Employees->find('list');
-        $this->set(compact('issueSlips','employees','issue_data','data_exist'));
+        $this->set(compact('issueSlips','employees','issue_data','data_exist','companies'));
     }
 
     /**
@@ -369,8 +369,8 @@ class IssueSlipsController extends AppController
       
         }
 
-        
+        $companies=$this->IssueSlips->Companies->get(1,['contain'=> ['States']]);
         $employees = $this->IssueSlips->Employees->find('list');
-        $this->set(compact('issueSlips','employees','issue_data','data_exist'));
+        $this->set(compact('issueSlips','employees','issue_data','data_exist','companies'));
     }
 }

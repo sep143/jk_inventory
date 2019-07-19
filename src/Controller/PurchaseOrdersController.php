@@ -65,9 +65,9 @@ class PurchaseOrdersController extends AppController
           }
         }
         
-        
+        $companies=$this->PurchaseOrders->Companies->get(1,['contain'=> ['States']]);
         $vendors = $this->PurchaseOrders->Vendors->find('list');
-        $this->set(compact('purchaseOrders','po_data','vendors','data_exist','po_grn_match_data'));
+        $this->set(compact('purchaseOrders','po_data','vendors','data_exist','po_grn_match_data','companies'));
       
     }
 
@@ -349,9 +349,9 @@ class PurchaseOrdersController extends AppController
           }
         }
         
-        
+        $companies=$this->PurchaseOrders->Companies->get(1,['contain'=> ['States']]);
         $vendors = $this->PurchaseOrders->Vendors->find('list');
-        $this->set(compact('purchaseOrders','po_data','vendors','data_exist'));
+        $this->set(compact('purchaseOrders','po_data','vendors','data_exist','companies'));
       
     }
 

@@ -39,6 +39,7 @@ class PurchaseOrdersTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
         $this->belongsTo('RequisitionSlips');
+        $this->belongsTo('companies');
         $this->belongsTo('GoodReceiveNotes');
         $this->belongsTo('Vendors', [
             'foreignKey' => 'vendor_id',

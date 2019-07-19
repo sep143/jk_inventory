@@ -37,7 +37,7 @@ class GoodReceiveNotesTable extends Table
         $this->setTable('good_receive_notes');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-
+        $this->belongsTo('Companies');
         $this->belongsTo('PurchaseOrders', [
             'foreignKey' => 'purchase_order_id',
             'joinType' => 'INNER'

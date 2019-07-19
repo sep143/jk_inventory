@@ -64,7 +64,8 @@ class GoodReceiveNotesController extends AppController
 
         //pr($goodReceiveNotes);exit;
         $vendors = $this->GoodReceiveNotes->PurchaseOrders->Vendors->find('list');
-        $this->set(compact('goodReceiveNotes','po_data','vendors','data_exist'));
+        $companies=$this->GoodReceiveNotes->Companies->get(1,['contain'=> ['States']]);
+        $this->set(compact('goodReceiveNotes','po_data','vendors','data_exist','companies'));
     }
 
     /**
@@ -348,17 +349,19 @@ class GoodReceiveNotesController extends AppController
 
         //pr($goodReceiveNotes);exit;
         $vendors = $this->GoodReceiveNotes->PurchaseOrders->Vendors->find('list');
-        $this->set(compact('goodReceiveNotes','po_data','vendors','data_exist'));
+        $companies=$this->GoodReceiveNotes->Companies->get(1,['contain'=> ['States']]);
+        $this->set(compact('goodReceiveNotes','po_data','vendors','data_exist','companies'));
     }
-     public function reportExport()
+     
+    public function reportExport()
     {
         $this->viewBuilder()->setLayout('pdf');
          $goodReceiveNotes = $this->GoodReceiveNotes->find()->where($this->request->getData('GoodReceiveNotes'))->contain(['GoodReceiveNoteRows'=>'RowMaterials','PurchaseOrders'=>['Vendors'],'Creaters','Inspectors']);
         /*$disposedDatas=$this->ReturnSlips->StockLedgers->find()
         ->where([$this->request->getData('ReturnSlips'),'StockLedgers.is_scrab'=>'1','StockLedgers.disposed_status'=>'1',])
         ->contain(['RowMaterials'=>'Units','Employees'=>'Departments','Disposers']);*/
-        
-        $this->set(compact('goodReceiveNotes'));
+        $companies=$this->GoodReceiveNotes->Companies->get(1,['contain'=> ['States']]);
+        $this->set(compact('goodReceiveNotes','companies'));
     }
     
     

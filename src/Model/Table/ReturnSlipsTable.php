@@ -39,7 +39,7 @@ class ReturnSlipsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
         $this->belongsTo('IssueSlips');
-
+        $this->belongsTo('Companies');
         $this->belongsTo('Employees', [
             'foreignKey' => 'employee_id',
             'joinType' => 'INNER'

@@ -61,7 +61,8 @@ class RequestSlipsController extends AppController
         }
         //$materialTransferSlips = $this->paginate($this->MaterialTransferSlips);
         $employees = $this->RequestSlips->Employees->find('list');
-        $this->set(compact('employees','materialTransfers','po_data','data_exist'));
+        $companies=$this->RequestSlips->Companies->get(1,['contain'=> ['States']]);
+        $this->set(compact('employees','materialTransfers','po_data','data_exist','companies'));
     }
 
     /**

@@ -73,11 +73,16 @@
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                 <h4 class="modal-title"> Purchase Order Details </h4>
                                               </div>
-                                              <div class="modal-body">
+                                              <div class="modal-body" id="printModel<?php echo $purchaseOrder->id ;?>">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <table cellpadding="0" cellspacing="0" class="table">
                                                         <thead>
+                                                        <?php
+                                                        echo '<tr style="font-size:14px; border:solid black;"><td colspan="5" align="center" style="text-align:center;">'.$companies->name .'<br/>' .$companies->address .',<br/>'. $companies->state->name .'</span><br/>
+                                                        <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
+                                                        $companies->gstin .'</span></td></tr>';
+                                                        ?>
                                                             <tr>
                                                                 <th scope="col"><?= ('Sr.No') ?></th>
                                                                 <th scope="col"><?= ('Raw Material') ?></th>
@@ -117,6 +122,9 @@
                                                  
                                               </div>
                                               <div class="modal-footer">
+                                              <!-- <?php echo  $this->Html->link( '<i class="fa fa-file-excel-o"></i> Print', '/purchase-orders/report/',['class' =>'btn btn-success btnClass','target'=>'_blank','escape'=>false]); ?> -->
+                                              
+                                              <button type="button" class="btn btn-info" onclick="printDiv('printModel<?php echo $purchaseOrder->id ;?>')" >Print</button>
                                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                               </div>
                                             </div>
@@ -142,5 +150,20 @@
         </div>
     </div>
 </div>
+
+<script>
+function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+     document.location.reload();
+}
+</script>
+
 <?= $this->element('selectpicker') ?> 
 <?= $this->element('datepicker') ?> 

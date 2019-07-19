@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title><?= isset($head_title)?$head_title:'School ERP' ?></title>
+        <title><?= isset($head_title)?$head_title:'Jk Inventory Management' ?></title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
         <?php
 		echo $this->Html->css([ 

@@ -432,35 +432,24 @@ class ReturnSlipsController extends AppController
     public function stockRegisterReport()
     {
         $stock_register = $this->ReturnSlips->StockLedgers->newEntity();
-
-        $row_material_id = $this->request->query('row_material_id');
-        $from = $this->request->query('from');
-        $to = $this->request->query('to');
-        
         $where = [];
-        if(!empty($row_material_id)){
-            $where ['StockLedgers.row_material_id'] = $row_material_id;
-            if(!empty($from)){
-            $where ['StockLedgers.transaction_date <='] = date('Y-m-d', strtotime($from));
-            $where ['StockLedgers.transaction_date >='] = date('Y-m-d', strtotime($to));
+         if($this->request->is(['post']))
+        {
+            //pr($this->request->getData('data'));exit;
+            foreach ($this->request->getData('data') as $key => $v) {
+                if(!empty($v))
+                {
+                    if (strpos($key, 'transaction_date') !== false)
+                        $v = date('Y-m-d',strtotime($v));
+                    $where ['StockLedgers.'.$key] = $v;
+                }
             }
-        }
-       
-            // //pr($this->request->getData('data'));exit;
-            // foreach ($this->request->getData('data') as $key => $v) {
-            //     if(!empty($v))
-            //     {
-            //         if (strpos($key, 'transaction_date') !== false)
-            //             $v = date('Y-m-d',strtotime($v));
-            //         $where ['StockLedgers.'.$key] = $v;
-            //     }
-            // }
-            // // pr($where);exit;
+            //pr($where);exit;
             $this->set(compact('where'));
             $StockDatas=$this->ReturnSlips->StockLedgers->find()
             ->where([$where,'StockLedgers.is_scrab'=>'0','StockLedgers.disposed_status'=>'0','StockLedgers.department_id'=>$this->Auth->User('department_id')])
             ->contain(['Departments','RowMaterials'=>['Units']])->toArray();
-            //pr($StockDatas);exit;
+            //pr($StockDatas->toArray());exit;
 
             if(!empty($StockDatas))
             {
@@ -469,11 +458,46 @@ class ReturnSlipsController extends AppController
             else{
             $data_exist='No Record Found';
             }
-                   
+            
+        }
         
         $rowMaterials = $this->ReturnSlips->StockLEdgers->RowMaterials->find('list');
         $this->set(compact('StockDatas','stock_register','rowMaterials','data_exist'));
     }
+    // {
+    //     $stock_register = $this->ReturnSlips->StockLedgers->newEntity();
+
+    //     $row_material_id = $this->request->query('row_material_id');
+    //     $from = $this->request->query('from');
+    //     $to = $this->request->query('to');
+        
+    //     $where = [];
+    //     if(!empty($row_material_id)){
+    //         $where ['StockLedgers.row_material_id'] = $row_material_id;
+    //         if(!empty($from)){
+    //         $where ['StockLedgers.transaction_date <='] = date('Y-m-d', strtotime($from));
+    //         $where ['StockLedgers.transaction_date >='] = date('Y-m-d', strtotime($to));
+    //         }
+    //     }
+       
+    //         $this->set(compact('where'));
+    //         $StockDatas=$this->ReturnSlips->StockLedgers->find()
+    //         ->where([$where,'StockLedgers.is_scrab'=>'0','StockLedgers.disposed_status'=>'0','StockLedgers.department_id'=>$this->Auth->User('department_id')])
+    //         ->contain(['Departments','RowMaterials'=>['Units']])->toArray();
+    //         //pr($StockDatas);exit;
+
+    //         if(!empty($StockDatas))
+    //         {
+    //           $data_exist='data_exist';
+    //         }
+    //         else{
+    //         $data_exist='No Record Found';
+    //         }
+                   
+        
+    //     $rowMaterials = $this->ReturnSlips->StockLEdgers->RowMaterials->find('list');
+    //     $this->set(compact('StockDatas','stock_register','rowMaterials','data_exist'));
+    // }
 
 
      public function mainstockRegisterExport()
@@ -489,7 +513,8 @@ class ReturnSlipsController extends AppController
             'StockLedgers.department_id'=>$department_id])
         ->contain(['Departments','RowMaterials'=>['Units'],'Employees'=>['Departments']]);
         //pr($StockDatas->toArray());exit;
-        $this->set(compact('StockDatas'));
+        $companies=$this->ReturnSlips->Companies->get(1,['contain'=> ['States']]);
+        $this->set(compact('StockDatas','companies'));
     }
     
 }

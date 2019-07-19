@@ -38,7 +38,7 @@ class IssueSlipsTable extends Table
         $this->setTable('issue_slips');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-
+        $this->belongsTo('companies');
         $this->belongsTo('Employees', [
             'foreignKey' => 'employee_id',
             'joinType' => 'INNER'

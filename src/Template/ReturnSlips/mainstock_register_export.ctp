@@ -31,6 +31,11 @@
                     </div>
                      <table id="example1" class="table table-bordered table-striped" style="border-collapse:collapse;">
                          <thead>
+                         <?php
+                       echo '<tr style="font-size:14px;"><td colspan="14" align="center" style="text-align:center;">'.$companies->name .'<br/>' .$companies->address .',<br/>'. $companies->state->name .'</span><br/>
+                       <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
+                       $companies->gstin .'</span></td></tr>';
+                       ?>
                             <tr>
                                 <h3> Name Of Article : <b><?php  $b=0;
                                 foreach ($StockDatas as $stockdatas){
@@ -76,7 +81,9 @@
                                         <?php if(($stockdata->good_receive_note_id !='' || $stockdata->return_slip_id !='' ) && ($stockdata->status=='In')) { ?>
                                                 <?php $total_in=$total_in+$stockdata->quantity; ?>
                                                     <?= h($stockdata->quantity.' '.$stockdata->row_material->unit->name) ?></th>
-                                        <?php } ?>
+                                        <?php }else if($stockdata->opening_balence == 'yes'  && $stockdata->status=='In'){
+                                         $total_in=$total_in+$stockdata->quantity;
+                                     } ?>
                                 </td>
                                 <td><?php
                                

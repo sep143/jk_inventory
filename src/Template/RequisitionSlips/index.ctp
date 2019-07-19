@@ -68,11 +68,16 @@
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                 <h4 class="modal-title"> Requisition Slip Details </h4>
                                               </div>
-                                              <div class="modal-body">
+                                              <div class="modal-body" id="printModel<?php echo $requisitionSlip->id ;?>">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <table class="table" style="width:100%;">
                                                         <thead>
+                                                        <?php
+                                                        echo '<tr style="font-size:14px; border:solid black;"><td colspan="5" align="center" style="text-align:center;">'.$companies->name .'<br/>' .$companies->address .',<br/>'. $companies->state->name .'</span><br/>
+                                                        <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
+                                                        $companies->gstin .'</span></td></tr>';
+                                                        ?>
                                                             <tr>
                                                                 <th scope="col"><?= ('S.No.') ?></th>
                                                                 <th scope="col"><?= ('Raw Material') ?></th>
@@ -98,6 +103,7 @@
                                                  
                                               </div>
                                               <div class="modal-footer">
+                                              <button type="button" class="btn btn-info" onclick="printDiv('printModel<?php echo $requisitionSlip->id ;?>')" >Print</button>
                                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                               </div>
                                             </div>
@@ -123,5 +129,19 @@
         </div>
     </div>
 </div>
+
+
+<script>
+function printDiv(divName) {
+   var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+     
+     document.body.innerHTML = printContents;
+
+     window.print();
+     document.body.innerHTML = originalContents;
+     document.location.reload();
+}
+</script>
  <?= $this->element('selectpicker') ?> 
  <?= $this->element('datepicker') ?> 
