@@ -301,10 +301,13 @@ class EmployeesController extends AppController
         $where =[];
         if(!empty($employe)){
             $where['StockLedgers.employee_id'] = $employe ;
-            if(!empty($from)){
-                $where['StockLedgers.transaction_date >='] = date('Y-m-d', strtotime($from));
-                $where['StockLedgers.transaction_date <='] = date('Y-m-d', strtotime($to));
-            }
+            
+        }
+        if(!empty($from)){
+            $where['StockLedgers.transaction_date >='] = date('Y-m-d', strtotime($from));
+        }
+        if(!empty($to)){
+            $where['StockLedgers.transaction_date <='] = date('Y-m-d', strtotime($to));
         }
             $query=$this->Employees->StockLedgers->RowMaterials->find();
             $row_material_list = $query
@@ -604,9 +607,28 @@ class EmployeesController extends AppController
             }else{
                  $usedDatas=$this->Employees->StockLedgers->find()->where(['StockLedgers.department_id' => $this->Auth->User('department_id'),'StockLedgers.employee_id'=> $this->Auth->User('id'),'StockLedgers.is_used'=>'1'])->contain(['RowMaterials'=>['RowMaterialCategories','Units']]);
             }
-            
+
+            $RowMaterialCategory= $this->Employees->StockLedgers->RowMaterials->RowMaterialCategories->find('list',[
+                'keyField' => 'id',
+                'valueField' => 'name',
+           ]);
             
        // pr($usedDatas->toArray());exit;
-        $this->set(compact('row_material_list','itemConsumption','rowMaterial','usedDatas')); 
+        $this->set(compact('row_material_list','itemConsumption','rowMaterial','usedDatas','RowMaterialCategory')); 
     }
+
+      /*
+	* category select then meterial get category wise with current_stock calulate then on page jquery to check stock in enter qnty.
+	*/
+	public function meterialShow($cat_id=null){
+        $this->viewBuilder()->setLayout('');
+        $query=$this->Employees->StockLedgers->RowMaterials->find()->where(['row_material_category_id'=>$cat_id]);
+        $row_material_list = $query;
+        $findDatas=[];
+        foreach ($row_material_list as $row_materials) {
+          $findDatas[]=['value' => $row_materials->id,'text' => $row_materials->name.' ('.$row_materials->unit->name.')','current_stock'=>@$row_materials->stock_ledgers[0]->total_in - @$row_materials->stock_ledgers[0]->total_out];
+        }
+       //$findDatas =  $this->Employees->StockLedgers->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
+       $this->set(compact('findDatas'));
+     }
 }

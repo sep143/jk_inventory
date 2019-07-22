@@ -55,9 +55,10 @@ class RequisitionSlipsController extends AppController
             }
            
         if(!empty($where) || !empty($where1)){    
-
+            
         $requisitionSlip=$this->RequisitionSlips->RequisitionSlipRows->find()->where($where1)
         ->contain(['RequisitionSlips','RowMaterials']);
+        
         foreach($requisitionSlip as $req)
         {
             $row_material_id=$req->row_material_id;
@@ -94,7 +95,9 @@ class RequisitionSlipsController extends AppController
         //  
         $rowMaterials=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->find('list');
         $companies=$this->RequisitionSlips->Companies->get(1,['contain'=> ['States']]);
-        $this->set(compact('requisitionSlip','row_material_list','returns','rowMaterials','new','url','status','companies'));
+        $rowMaterialsName=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->find()->where(['id'=>$row_id])->first();
+        // pr($rowMaterialsName->toArray()); exit;
+        $this->set(compact('requisitionSlip','row_material_list','rowMaterialsName','returns','rowMaterials','new','url','status','companies'));
     }
 
 
@@ -259,9 +262,13 @@ class RequisitionSlipsController extends AppController
             ])
         ])
        ->contain(['Units']);
+       $RowMaterialCategory= $this->RequisitionSlips->RequisitionSlipRows->RowMaterials->RowMaterialCategories->find('list',[
+        'keyField' => 'id',
+        'valueField' => 'name',
+   ]);
        //pr($requisitionSlip);exit;
         $status=['1'=>'Deactive','0'=>'Active'];
-        $this->set(compact('requisitionSlip','rowMaterials','status'));
+        $this->set(compact('requisitionSlip','rowMaterials','status','RowMaterialCategory'));
     }
 
     /**

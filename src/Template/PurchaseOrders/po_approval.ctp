@@ -123,7 +123,7 @@
                                               <label> Comment : </label>
                                                 <?php 
                                                  echo $this->Form->control('approve_comment',[
-                                                    'label' => false,'class'=>'form-control ','placeholder'=>'Enter comment','type'=>'textarea','rows'=>'3','style'=>'resize:none;']);
+                                                    'label' => false,'class'=>'form-control ','placeholder'=>'Enter comment','type'=>'textarea','rows'=>'3','required'=>'required','style'=>'resize:none;']);
                                                   ?>
                                                 <?php echo $this->Form->hidden('accept_request_id',[
                                                   'value'=>$purchaseOrder->id]);?>
@@ -154,7 +154,7 @@
                                               <div class="modal-body">
                                                 <label> Reject Reason : </label>
                                                 <?php echo $this->Form->control('reject_comment',[
-                                                    'label' => false,'class'=>'form-control ','placeholder'=>'Enter reason','type'=>'textarea','rows'=>'3','style'=>'resize:none;']);
+                                                    'label' => false,'class'=>'form-control ','placeholder'=>'Enter reason','type'=>'textarea','rows'=>'3', 'required'=>'required','style'=>'resize:none;']);
                                                 ?>
                                                 <?php echo $this->Form->hidden('reject_request_id',[
                                                   'value'=>$purchaseOrder->id]);?>

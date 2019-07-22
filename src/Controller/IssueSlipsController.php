@@ -58,9 +58,10 @@ class IssueSlipsController extends AppController
           }
       
         }
-
+        
         $companies=$this->IssueSlips->Companies->get(1,['contain'=> ['States']]);
         $employees = $this->IssueSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id, 'Employees.is_deleted '=>0]);
+        // pr($issueSlips->toArray()); exit;
         $this->set(compact('issueSlips','employees','issue_data','data_exist','companies'));
     }
 

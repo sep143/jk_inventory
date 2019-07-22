@@ -25,6 +25,7 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
+                                                <th> Category</th>
                                                 <th> Material</th>
                                                 <th> Quantity</th>
                                                 <th> Description</th>
@@ -34,8 +35,12 @@
                                         <tbody id="main_tbody1"> 
                                 <?php foreach($requisitionSlip->requisition_slip_rows as $requisitionrow) { ?>
                                             <tr class="main_tr1">
-                                                <td>1</td>  
+                                                <td>1</td> 
                                                 <td>
+                                                    <?php echo $this->Form->control('row_material_category_id',['options' => $RowMaterialCategory,
+                                                    'label' => false,'class'=>'selectaddCat category_id','id'=>'category_first','empty'=>'Select category','style'=>'width:300px;','value'=>$requisitionrow->row_material_category_id]);?>
+                                                </td> 
+                                                <td class="row_material_id">
                                                     <?php echo $this->Form->control('row_material_id',['options' => $rowMaterials,
                                                     'label' => false,'class'=>'selectadd material_id','empty'=>'Select Station','style'=>'width:300px;','value'=>$requisitionrow->row_material_id]);?>
                                                 </td>
@@ -82,7 +87,11 @@
         <tr class="main_tr1">
             <td>1</td>  
             <td>
-                <?php echo $this->Form->control('row_material_id',['options' => $rowMaterials,
+                <?php echo $this->Form->control('row_material_category_id',['options' => $RowMaterialCategory,
+                'label' => false,'class'=>'selectaddCat category_id','id'=>'category_first','empty'=>'Select category','style'=>'width:300px;','value'=>$requisitionrow->row_material_category_id]);?>
+            </td>
+            <td>
+                <?php echo $this->Form->control('row_material_id',['options' => '',
                 'label' => false,'class'=>'selectadd material_id','empty'=>'Select Station','style'=>'width:300px;']);?>
             </td>
             <td>
@@ -131,6 +140,21 @@ $(document).ready(function(){
         }
     }); 
 
+    $(document).on('change','.selectaddCat',function(){
+		//var row_material_category_id=$(this).val();
+		var temp=$(this);
+		var cat_id_add = $(this).val();
+		var url='".$this->Url->build(['controller' => 'RequisitionSlips', 'action' => 'meterialShow'])."';
+		url = url+'/'+cat_id_add; 
+		$.ajax({
+			url:url,
+			type: 'GET'
+		}).done(function(response){
+			temp.closest('tr').find('.row_material_id').html(response);
+			rename_rows();
+		}); 
+	});
+
      function rename_rows(){
         var j=0;
         var p=0;    
@@ -138,11 +162,13 @@ $(document).ready(function(){
         $('#main_table1 tbody tr.main_tr1').each(function()
         { 
             $(this).find('td:nth-child(1)').html(++p);
-             $(this).find('td:nth-child(2) select.selectadd').attr({name:'requisition_slip_rows['+i+'][row_material_id]'});
-             $(this).find('td:nth-child(2) select.selectadd').select2();
-              $(this).find('td:nth-child(3) input').attr({name:'requisition_slip_rows['+i+'][quantity]'});
+            $(this).find('td:nth-child(2) select.selectaddCat').attr({name:'requisition_slip_rows['+i+'][row_material_category_id]'});
+             $(this).find('td:nth-child(2) select.selectaddCat').select2();
+             $(this).find('td:nth-child(3) select.selectadd').attr({name:'requisition_slip_rows['+i+'][row_material_id]'});
+             $(this).find('td:nth-child(3) select.selectadd').select2();
+              $(this).find('td:nth-child(4) input').attr({name:'requisition_slip_rows['+i+'][quantity]'});
 
-              $(this).find('td:nth-child(4) textarea').attr({name:'requisition_slip_rows['+i+'][description]'});
+              $(this).find('td:nth-child(5) textarea').attr({name:'requisition_slip_rows['+i+'][description]'});
             i++;
          });
      }

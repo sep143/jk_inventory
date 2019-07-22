@@ -18,9 +18,9 @@
                                      <?= $this->Form->control('transaction_date', ['label' => false, 'class'=>'form-control default-date-picker datepicker','type'=>'text','placeholder'=>'Select Date','data-date-format'=>'dd-M-yyyy','value'=>date('d-M-Y')])?>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="control-label"> Bill No :</label>
+                                    <label class="control-label"> Bill No : <span class="required" aria-required="true"> * </span></label>
                                      <?php echo $this->Form->control('bill_no',[
-                                    'label' => false,'class'=>'form-control ','placeholder'=>'Enter Bill/Challan No','type'=>'text']);?>
+                                    'label' => false,'class'=>'form-control ','placeholder'=>'Enter Bill/Challan No','type'=>'text','required'=>'required']);?>
                                 </div>
                             </div>
                             <span class="help-block"></span>
@@ -87,7 +87,7 @@
                                                 </td>
                                                 <td>
                                                 <?php echo $this->Form->control('good_receive_note_rows.'.$j.'.quantity',[
-                                                    'label' => false,'class'=>'form-control  qty','placeholder'=>'Enter quantity','type'=>'text','style'=>'width:100%']);?>
+                                                    'label' => false,'class'=>'form-control  qty','placeholder'=>'Enter quantity','type'=>'text','required'=>'required','style'=>'width:100%']);?>
                                                 </td>
                                                 <td>
                                                     <?php echo $this->Form->control('good_receive_note_rows.'.$j.'.amount',[
@@ -142,6 +142,10 @@ $(document).ready(function(){
         var current = parseInt($(this).val());
         var rate = parseInt($(this).closest('tr').find('td input.rate').val());
         if(isNaN(current)){ current = 0;}
+        if(current == 0){
+            alert('Invalid Quantity');
+            $(this).val('');
+        }
         if(current != 0) {
             if(current <= pending_qty){
                  var amount=rate*current;

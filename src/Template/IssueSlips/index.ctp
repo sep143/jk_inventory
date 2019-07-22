@@ -40,10 +40,12 @@
                                 <?= $this->Form->end(); ?>
                             </div>
                         </div><br></br>
+                        
                 <?php if($data_exist=='data_exist') { ?>
                 <div class="form-group">
                 
-                   <?php $page_no=$this->Paginator->current('issueSlips'); $page_no=($page_no-1)*20; ?>
+                   <?php $page_no=$this->Paginator->current('issueSlips'); $page_no=($page_no-1)*20;
+                   //echo  $this->Paginator->current('issueSlips'); ?>
                     <table cellpadding="0" cellspacing="0" class="table">
                         <thead>
                             <tr>
@@ -141,10 +143,13 @@
                                     </div> 
                                 </td>
                             </tr>
-                            <?php $i++;endforeach; ?>
+                            <?php $i++; endforeach; ?>
                         </tbody>
                     </table>
                 </div>
+                <div class="box-footer">
+                <?= $this->element('pagination') ?> 
+            </div>
             </div>
             <!--  <div class="box-footer">
                 <?php //echo $this->element('pagination') ?> 

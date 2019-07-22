@@ -44,16 +44,16 @@ $companies->gstin .'</span></td></tr></table>';
                              <?= $this->Form->create($new,['autocomplete'=>'off', 'type'=>'GET']) ?>
                                 <div class="row">
                                      <div class="col-sm-4">
-                                        <label class="control-label"> Row Material</label>
-                                        <?php echo $this->Form->control('row_material_id', ['options' =>$rowMaterials, 'empty' =>'Select Material','label'=>false,'class'=>'select2','style'=>'width:100%;','required']);?>
+                                        <label class="control-label"> Material</label>
+                                        <?php echo $this->Form->control('row_material_id', ['options' =>$rowMaterials, 'empty' =>'Select Material','label'=>false,'class'=>'select2','style'=>'width:100%;','required','value'=>$this->request->query('row_material_id')]);?>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="control-label"> Date From </label>
-                                        <?= $this->Form->control('from',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date'])?>
+                                        <?= $this->Form->control('from',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>$this->request->query('from')])?>
                                     </div>
                                     <div class="col-md-2">
                                         <label class="control-label"> Date To </label>
-                                        <?= $this->Form->control('to',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date'])?>
+                                        <?= $this->Form->control('to',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>$this->request->query('to')])?>
                                     </div>
                                    <div class="col-sm-1 ">
                                        <?= $this->Form->submit('SEARCH',['class'=>'btn btn-info btnClass','style'=>'margin-top:28px;','id'=>'submit_member'])?>
@@ -75,18 +75,14 @@ $companies->gstin .'</span></td></tr></table>';
                          <thead>
                             <tr>
                                 <h3> Name Of Article : <b><?php
-                                $a=[];$abc ='';
-                                foreach($requisitionSlip as $req1)
-                                {
-
-                                    $a[]= $req1->row_material->name;
-                                    $abc = $req1->row_material->name;
-                                }
+                                // $a=[];$abc ='';
+                                // foreach($requisitionSlip as $req1)
+                                // {
+                                //     $a[]= $req1->row_material->name;
+                                //     $abc = $req1->row_material->name;
+                                // } 
+                                echo $rowMaterialsName->name;
                                  
-                                echo $abc;
-                                    
-                                
-                                
                                 ?></b></h3>
                             </tr>
                             <tr>

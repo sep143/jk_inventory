@@ -20,8 +20,16 @@
                     <span class="help-block"></span> 
                     <div class="row">
                         <div class="col-md-12">
+                            <label class="control-label"> Category <span class="required" aria-required="true"> * </span></label>
+                            <?php echo $this->Form->control('row_material_category_id',['options' => $RowMaterialCategory,
+                                        'label' => false,'class'=>'selectaddCat select2','id'=>'category_first','empty'=>'Select category','style'=>'width:100%;']);?>
+                        </div>
+                    </div>
+                    <span class="help-block"></span> 
+                    <div class="row">
+                        <div class="col-md-12 material_ajax">
                             <label class="control-label"> Material Category <span class="required" aria-required="true"> * </span></label>
-                            <?= $this->Form->control('row_material_id',array('options' => $rowMaterial,'class'=>'select2 material_id','label'=>false,'style'=>'width:100%','empty'=>'Select Material','required')) ?>
+                            <?= $this->Form->control('row_material_id',array('options' => '','class'=>'select2 material_id','label'=>false,'style'=>'width:100%','empty'=>'Select Material','required')) ?>
                         </div>
                     </div>
                     <span class="help-block"></span> 
@@ -177,6 +185,23 @@
 <?php
 $js="
 $(document).ready(function(){
+
+    $(document).on('change','.selectaddCat',function(){
+		//var row_material_category_id=$(this).val();
+		var temp=$(this);
+		var cat_id_add = $(this).val();
+		var url='".$this->Url->build(['controller' => 'employees', 'action' => 'meterialShow'])."';
+        url = url+'/'+cat_id_add; 
+        $.ajax({
+			url:url,
+			type: 'GET'
+		}).done(function(response){
+            $('.material_ajax').html(response);
+            $('#material_ids').select2();
+			
+		}); 
+	});
+
        $(document).on('keyup','.qty',function(){
             var current_stock1 = $('select.material_id option:selected').val();
             if(current_stock1==''){

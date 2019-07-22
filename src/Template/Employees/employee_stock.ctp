@@ -42,15 +42,15 @@ $companies->gstin .'</span></td></tr></table>';
                                 {?>
                                      <div class="col-md-3">
                                         <label class="control-label"> Select Employee</label>
-                                        <?php echo $this->Form->control('employee_id', ['options' =>$employee, 'empty' =>'Select employee','label'=>false,'class'=>'select2','style'=>'width:100%;',]);?>
+                                        <?php echo $this->Form->control('employee_id', ['options' =>$employee, 'empty' =>'Select employee','label'=>false,'class'=>'select2','style'=>'width:100%;','value'=>$this->request->query('employee_id')]);?>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="control-label"> Date From </label>
-                                        <?= $this->Form->control('from',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date'])?>
+                                        <?= $this->Form->control('from',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>$this->request->query('from')])?>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="control-label"> Date To </label>
-                                        <?= $this->Form->control('to',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date'])?>
+                                        <?= $this->Form->control('to',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>$this->request->query('to')])?>
                                     </div>
                                     <div class="col-md-1">
                                          <?= $this->Form->submit('SEARCH',['class'=>'btn btn-info btnClass','style'=>'margin-top:28px;'])?>

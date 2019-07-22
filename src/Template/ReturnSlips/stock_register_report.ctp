@@ -197,8 +197,7 @@ $(document).ready(function(){
 		}).done(function(response){
             $('.material_ajax').html(response);
             $('#material_ids').select2();
-			//temp.closest('tr').find('.row_material_id').html(response);
-			console.log(response);
+			
 		}); 
 	});
 

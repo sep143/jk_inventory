@@ -11,16 +11,16 @@
                         <div class="row">
                                 <div class="col-md-4">
                                     <label class="control-label"> Date <span class="required" aria-required="true"> * </span></label>
-                                     <?= $this->Form->control('transaction_date', ['label' => false, 'class'=>'form-control default-date-picker datepicker','type'=>'text','placeholder'=>'Select Date','data-date-format'=>'dd-M-yyyy','value'=>date('d-M-Y')])?>
+                                     <?= $this->Form->control('transaction_date', ['label' => false, 'class'=>'form-control default-date-picker datepicker', 'required'=>'required', 'type'=>'text','placeholder'=>'Select Date','data-date-format'=>'dd-M-yyyy','value'=>date('d-M-Y')])?>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label"> Delivery Date <span class="required" aria-required="true"> * </span></label>
-                                     <?= $this->Form->control('delivery_date', ['label' => false, 'class'=>'form-control default-date-picker datepicker','type'=>'text','placeholder'=>'Select Date','data-date-format'=>'dd-M-yyyy'])?>
+                                     <?= $this->Form->control('delivery_date', ['label' => false, 'class'=>'form-control default-date-picker datepicker','required'=>'required', 'type'=>'text','placeholder'=>'Select Date','data-date-format'=>'dd-M-yyyy'])?>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="control-label"> Vendor <span class="required" aria-required="true"> * </span></label>
                                     <?php echo $this->Form->control('vendor_id',['options' => $vendors,
-                                    'label' => false,'class'=>'select2','empty'=>'Select Vendor','    style'=>'width:300px;']);?>
+                                    'label' => false,'class'=>'select2','empty'=>'Select Vendor','  style'=>'width:300px;', 'required'=>'required']);?>
                                 </div>
                             </div>
                             <span class="help-block"></span><br></br>
@@ -60,7 +60,7 @@
                                                 </td>
                                                 <td>
                                                     <?php echo $this->Form->control('purchase_order_rows.'.$j.'.rate',[
-                                                    'label' => false,'class'=>'form-control rate','placeholder'=>'Enter rate','type'=>'text']);?>
+                                                    'label' => false,'class'=>'form-control rate','placeholder'=>'Enter rate','type'=>'text', 'required'=>'required']);?>
                                                 </td>
                                                  <td>
                                                     <?php echo $this->Form->control('purchase_order_rows.'.$j.'.amount',[
