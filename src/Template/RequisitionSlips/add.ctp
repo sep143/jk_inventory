@@ -145,6 +145,29 @@ $(document).ready(function(){
          });
      }
 
+
+     $(document).on('change','.material_id',function(){
+        var current_stock = $(this).closest('tr').find('select.material_id option:selected').attr('current_stock');
+    });
+    $(document).on('keyup','.qty',function(){
+        var current_stock1 = $(this).closest('tr').find('select.material_id option:selected').val();
+        if(current_stock1==''){
+            alert('Please Select Material');
+            $(this).closest('tr').find('td input.qty').val('');
+        }
+        else{
+                var current_stock = parseInt($(this).closest('tr').find('select.material_id option:selected').attr('current_stock'));
+                var qty = parseInt($(this).closest('tr').find('td input.qty').val()); 
+                if(qty>current_stock){
+                    alert('Quantity Exceed');
+                    $(this).closest('tr').find('td input.qty').val('');
+                }else{
+
+                }
+        }
+
+    });
+
   $('#ServiceForm').validate({ 
         rules: {
             name: {

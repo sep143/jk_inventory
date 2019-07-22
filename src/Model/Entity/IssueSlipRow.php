@@ -29,13 +29,7 @@ class IssueSlipRow extends Entity
      * @var array
      */
     protected $_accessible = [
-        'issue_slip_id' => true,
-        'row_material_id' => true,
-        'quantity' => true,
-        'is_deleted' => true,
-        'issue_slip' => true,
-        'description' => true,
-        'row_material' => true,
-        'stock_ledgers' => true
+        '*' => true,
+        'id' => false
     ];
 }

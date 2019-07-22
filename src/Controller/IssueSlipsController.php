@@ -24,7 +24,7 @@ class IssueSlipsController extends AppController
      */
     public function index($value='')
     {
-       
+      $user_id = $this->Auth->User('id');
         $issue_data = $this->IssueSlips->newEntity();
         $where = [];
         $data_exist='';
@@ -60,7 +60,7 @@ class IssueSlipsController extends AppController
         }
 
         $companies=$this->IssueSlips->Companies->get(1,['contain'=> ['States']]);
-        $employees = $this->IssueSlips->Employees->find('list');
+        $employees = $this->IssueSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id, 'Employees.is_deleted '=>0]);
         $this->set(compact('issueSlips','employees','issue_data','data_exist','companies'));
     }
 
@@ -101,6 +101,7 @@ class IssueSlipsController extends AppController
             $emp_id=$issueSlip->employee_id;
             $depts=$this->IssueSlips->Employees->find()->select('department_id')->where(['Employees.id'=>$emp_id])->first();
             $emp_dept_id=$depts->department_id;
+            // pr($issueSlip); exit;
             if ($this->IssueSlips->save($issueSlip)) {
                 
                 foreach ($issueSlip->issue_slip_rows as  $issue_slip_row) 
@@ -183,10 +184,24 @@ class IssueSlipsController extends AppController
         foreach ($row_material_list as $row_materials) {
           $rowMaterial[]=['value' => $row_materials->id,'text' => $row_materials->name.' ('.$row_materials->unit->name.')','current_stock'=>@$row_materials->stock_ledgers[0]->total_in - @$row_materials->stock_ledgers[0]->total_out];
         }
+
+        $RowMaterialCategory= $this->IssueSlips->IssueSlipRows->RowMaterials->RowMaterialCategories->find('list',[
+          'keyField' => 'id',
+          'valueField' => 'name',
+     ]);
         //pr($rowMaterial);exit;
-        $employees = $this->IssueSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id]);;
-        $this->set(compact('issueSlip', 'employees','rowMaterials','rowMaterial'));
+        $employees = $this->IssueSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id, 'Employees.is_deleted '=>0]);
+        $this->set(compact('issueSlip', 'employees','rowMaterials','rowMaterial','RowMaterialCategory'));
     }
+
+    /*
+	* category select then meterial get category wise
+	*/
+	public function meterialShow($cat_id=null){
+    $this->viewBuilder()->setLayout('');
+   $findDatas =  $this->IssueSlips->IssueSlipRows->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
+   $this->set(compact('findDatas'));
+ }
 
     /**
      * Edit method

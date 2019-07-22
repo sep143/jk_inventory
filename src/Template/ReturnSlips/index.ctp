@@ -97,7 +97,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col"><?= $this->Paginator->sort('Sr.No') ?></th>
-                                                                <th scope="col"><?= $this->Paginator->sort('Raw Material') ?></th>
+                                                                <th scope="col"><?= $this->Paginator->sort('Material') ?></th>
                                                                 <th scope="col"><?= $this->Paginator->sort('Quantity') ?></th>
                                                                 <th scope="col"><?= $this->Paginator->sort('Status') ?></th>
                                                                  <th scope="col"><?= $this->Paginator->sort('Particulars') ?></th>

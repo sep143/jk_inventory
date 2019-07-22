@@ -4,9 +4,9 @@
         <div class="box box-primary">
             <div class="box-header with-border" >
                 <?php if(!empty($id)){ ?>
-                     <label > Edit Raw Material </label>
+                     <label > Edit Material </label>
                 <?php }else{ ?>
-                     <label> Add Raw Material </label>
+                     <label> Add Material </label>
                 <?php } ?>
             </div><hr>
             <div class="box-body">
@@ -151,7 +151,7 @@
                             ?>
                             </td>
                             <td class="actions">
-                                <?= $this->Html->link(__('<i class="fa fa-edit"></i>'), ['action' => 'index', $EncryptingDecrypting->encryptData($rowMaterial->id)],['class'=>'btn btn-info editbtn','escape'=>false, 'data-widget'=>'Edit Raw Material', 'data-toggle'=>'tooltip', 'data-original-title'=>'Edit Raw Material']) ?>
+                                <?= $this->Html->link(__('<i class="fa fa-edit"></i>'), ['action' => 'index', $EncryptingDecrypting->encryptData($rowMaterial->id)],['class'=>'btn btn-info editbtn','escape'=>false, 'data-widget'=>'Edit Material', 'data-toggle'=>'tooltip', 'data-original-title'=>'Edit Material']) ?>
                             </td>
                         </tr>
                     <?php $i++; endforeach; ?>

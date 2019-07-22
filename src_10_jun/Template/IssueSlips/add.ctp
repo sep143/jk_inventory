@@ -59,7 +59,7 @@
             <td>1</td>  
             <td>
                 <?php echo $this->Form->control('row_material_id',['options' => $rowMaterial,
-                'label' => false,'class'=>'selectadd material_id','empty'=>'Select Raw Material','style'=>'width:400px;']);?>
+                'label' => false,'class'=>'selectadd material_id','empty'=>'Select Material','style'=>'width:400px;']);?>
             </td>
             <td>
                 <?php echo $this->Form->control('quantity',[
@@ -125,7 +125,7 @@ $(document).ready(function(){
         $(document).on('keyup','.qty',function(){
             var current_stock1 = $(this).closest('tr').find('select.material_id option:selected').val();
             if(current_stock1==''){
-                alert('Please Select Raw Material');
+                alert('Please Select Material');
                 $(this).closest('tr').find('td input.qty').val('');
             }
             else{

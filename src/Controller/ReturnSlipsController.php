@@ -24,7 +24,7 @@ class ReturnSlipsController extends AppController
      */
      public function index($value='')
     {
-
+        $user_id = $this->Auth->User('id');
         $return_data = $this->ReturnSlips->newEntity();
         $where = [];
         $data_exist='';
@@ -58,7 +58,7 @@ class ReturnSlipsController extends AppController
           }
         }
         
-        $employees = $this->ReturnSlips->Employees->find('list');
+        $employees = $this->ReturnSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id, 'Employees.is_deleted '=>0]);;
         $this->set(compact('returnSlips','employees','return_data','data_exist'));
     }
 
@@ -212,7 +212,7 @@ class ReturnSlipsController extends AppController
                 return $this->redirect(['action' => 'add?employee_id='.$employee_id]);
             }
         
-          $employees = $this->ReturnSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id]);
+          $employees = $this->ReturnSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id, 'Employees.is_deleted '=>0]);
           $this->set(compact('employees'));
     }
 
@@ -460,10 +460,23 @@ class ReturnSlipsController extends AppController
             }
             
         }
-        
-        $rowMaterials = $this->ReturnSlips->StockLEdgers->RowMaterials->find('list');
-        $this->set(compact('StockDatas','stock_register','rowMaterials','data_exist'));
+        $RowMaterialCategory= $this->ReturnSlips->StockLedgers->RowMaterials->RowMaterialCategories->find('list',[
+            'keyField' => 'id',
+            'valueField' => 'name',
+       ]);
+        $rowMaterials = $this->ReturnSlips->StockLedgers->RowMaterials->find('list');
+        $this->set(compact('StockDatas','stock_register','rowMaterials','data_exist','RowMaterialCategory'));
     }
+
+      /*
+	* category select then meterial get category wise
+	*/
+	public function meterialShow($cat_id=null){
+        $this->viewBuilder()->setLayout('');
+       $findDatas =  $this->ReturnSlips->StockLedgers->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
+       $this->set(compact('findDatas'));
+     }
+
     // {
     //     $stock_register = $this->ReturnSlips->StockLedgers->newEntity();
 

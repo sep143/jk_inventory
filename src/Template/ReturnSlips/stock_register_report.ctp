@@ -10,15 +10,20 @@
                         <div class="col-md-12">
                              <?= $this->Form->create($stock_register,['autocomplete'=>'off','id'=>'ServiceForm']) ?>
                                 <div class="row">
-                                     <div class="col-sm-4">
-                                        <label class="control-label"> Row Material</label>
-                                        <?php echo $this->Form->control('data[row_material_id]', ['options' =>$rowMaterials, 'empty' =>'Select Material','label'=>false,'class'=>'select2','style'=>'width:100%;','required']);?>
-                                    </div>
                                     <div class="col-sm-3">
+                                    <label class="control-label"> Category</label>
+                                        <?php echo $this->Form->control('row_material_category_id',['options' => $RowMaterialCategory,
+                                        'label' => false,'class'=>'selectaddCat select2','id'=>'category_first','empty'=>'Select category','style'=>'width:300px;']);?>
+                                    </div>
+                                     <div class="col-sm-3 material_ajax">
+                                        <label class="control-label"> Material</label>
+                                        <?php echo $this->Form->control('data[row_material_id]', ['options' =>'', 'empty' =>'Select Material','label'=>false,'class'=>'select2','style'=>'width:100%;','required']);?>
+                                    </div>
+                                    <div class="col-sm-2">
                                         <label class="control-label"> Date From </label>
                                         <?= $this->Form->control('data[transaction_date >=]',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>@$_POST['data']['transaction_date >=']])?>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <label class="control-label"> Date To </label>
                                         <?= $this->Form->control('data[transaction_date <=]',['class'=>'datepicker form-control','label'=>false,'data-date-format'=>'dd-M-yyyy','placeholder'=>'Select Date','value'=>@$_POST['data']['transaction_date <=']])?>
                                     </div>
@@ -179,6 +184,24 @@
 <?php
 $js="
 $(document).ready(function(){
+
+    $(document).on('change','.selectaddCat',function(){
+		//var row_material_category_id=$(this).val();
+		var temp=$(this);
+		var cat_id_add = $(this).val();
+		var url='".$this->Url->build(['controller' => 'returnSlips', 'action' => 'meterialShow'])."';
+        url = url+'/'+cat_id_add; 
+        $.ajax({
+			url:url,
+			type: 'GET'
+		}).done(function(response){
+            $('.material_ajax').html(response);
+            $('#material_ids').select2();
+			//temp.closest('tr').find('.row_material_id').html(response);
+			console.log(response);
+		}); 
+	});
+
 $('#ServiceForm').validate({ 
         rules: {
             row_material_id: {

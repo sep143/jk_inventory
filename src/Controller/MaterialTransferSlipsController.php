@@ -24,7 +24,7 @@ class MaterialTransferSlipsController extends AppController
      */
     public function index()
     {
-       
+      $user_id = $this->Auth->User('id');
         $po_data = $this->MaterialTransferSlips->newEntity();
         $where = [];
         $data_exist='';
@@ -60,7 +60,7 @@ class MaterialTransferSlipsController extends AppController
           }
         }
         //$materialTransferSlips = $this->paginate($this->MaterialTransferSlips);
-        $employees = $this->MaterialTransferSlips->Employees->find('list');
+        $employees = $this->MaterialTransferSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id, 'Employees.is_deleted '=>0]);
         $this->set(compact('employees','materialTransfers','po_data','data_exist'));
     }
 

@@ -623,7 +623,7 @@ CREATE TABLE `row_material_categories` (
 
 INSERT INTO `row_material_categories` (`id`, `name`, `is_deleted`) VALUES
 (1, 'Fixed', 0),
-(2, 'Raw Material', 0),
+(2, 'Material', 0),
 (3, 'Scape', 0),
 (5, 'Consumable', 0);
 

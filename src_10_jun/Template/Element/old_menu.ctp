@@ -20,7 +20,7 @@
         <li class="<?= (@$active_sub_li=='Units')?'active':'' ?>"><a href="<?= $this->Url->build(['controller'=>'Units','action' =>'index'])?>"> Units</a></li>
         <li class="<?= (@$active_sub_li=='Vendors')?'active':'' ?>"><a href="<?= $this->Url->build(['controller'=>'Vendors','action' =>'index'])?>">Vendors</a></li> 
         <li class="<?= (@$active_sub_li=='RowMaterialCategories')?'active':'' ?>"><a href="<?= $this->Url->build(['controller'=>'RowMaterialCategories','action' =>'index'])?>"> RM Category</a></li>
-        <li class="<?= (@$active_sub_li=='RowMaterials')?'active':'' ?>"><a href="<?= $this->Url->build(['controller'=>'RowMaterials','action' =>'index'])?>"> Raw Materials</a></li>
+        <li class="<?= (@$active_sub_li=='RowMaterials')?'active':'' ?>"><a href="<?= $this->Url->build(['controller'=>'RowMaterials','action' =>'index'])?>"> Materials</a></li>
     </ul>
 </li>
     <li class="treeview">

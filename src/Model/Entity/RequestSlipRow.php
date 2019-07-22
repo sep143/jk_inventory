@@ -27,10 +27,7 @@ class RequestSlipRow extends Entity
      * @var array
      */
     protected $_accessible = [
-        'request_slip_id' => true,
-        'row_material_id' => true,
-        'quantity' => true,
-        'request_slip' => true,
-        'row_material' => true
+        '*' => true,
+        'id' => false
     ];
 }

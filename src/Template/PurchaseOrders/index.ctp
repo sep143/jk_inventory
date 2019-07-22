@@ -90,7 +90,7 @@
                                                         ?>
                                                             <tr>
                                                                 <th scope="col"><?= ('Sr.No') ?></th>
-                                                                <th scope="col"><?= ('Raw Material') ?></th>
+                                                                <th scope="col"><?= ('Material') ?></th>
                                                                 <th scope="col"><?= ('Quantity') ?></th>
                                                                 <th scope="col"><?= ('Rate') ?></th>
                                                                 <th scope="col"><?= ('Total') ?></th>

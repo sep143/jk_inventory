@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label class="control-label"> Material Category <span class="required" aria-required="true"> * </span></label>
-                            <?= $this->Form->control('row_material_id',array('options' => $rowMaterial,'class'=>'select2 material_id','label'=>false,'style'=>'width:100%','empty'=>'Select Raw Material','required')) ?>
+                            <?= $this->Form->control('row_material_id',array('options' => $rowMaterial,'class'=>'select2 material_id','label'=>false,'style'=>'width:100%','empty'=>'Select Material','required')) ?>
                         </div>
                     </div>
                     <span class="help-block"></span> 
@@ -180,7 +180,7 @@ $(document).ready(function(){
        $(document).on('keyup','.qty',function(){
             var current_stock1 = $('select.material_id option:selected').val();
             if(current_stock1==''){
-                alert('Please Select Raw Material');
+                alert('Please Select Material');
                 $('.qty').val('');
             }
             else{

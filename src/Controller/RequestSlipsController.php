@@ -126,7 +126,7 @@ class RequestSlipsController extends AppController
             }
             $this->Flash->error(__('The request slip could not be saved. Please, try again.'));
         }
-    
+  
 
        $query=$this->RequestSlips->RequestSlipRows->RowMaterials->find();
        $row_material_list = $query
@@ -150,16 +150,29 @@ class RequestSlipsController extends AppController
               ->group('row_material_id')
               ->enableAutoFields(true); 
           }]);
-     //   pr($row_material_list->toArray());exit;
+       //pr($row_material_list->toArray());exit;
         $rowMaterial=[];
         foreach ($row_material_list as $row_materials) {
           $rowMaterial[]=['value' => $row_materials->id,'text' => $row_materials->name.' ('.$row_materials->unit->name.')','current_stock'=>@$row_materials->stock_ledgers[0]->total_in - @$row_materials->stock_ledgers[0]->total_out];
         }
+        $RowMaterialCategory= $this->RequestSlips->RequestSlipRows->RowMaterials->RowMaterialCategories->find('list',[
+          'keyField' => 'id',
+          'valueField' => 'name',
+     ]);
         //pr($rowMaterial);exit;
-        $employees = $this->RequestSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id]);
-        $this->set(compact('requestSlip', 'employees','rowMaterial'));
+        $employees = $this->RequestSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id, 'Employees.is_deleted '=>0]);
+        $this->set(compact('requestSlip', 'employees','rowMaterial','RowMaterialCategory'));
 
     }
+
+      /*
+	* category select then meterial get category wise
+	*/
+	public function meterialShow($cat_id=null){
+    $this->viewBuilder()->setLayout('');
+   $findDatas =  $this->RequestSlips->RequestSlipRows->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
+   $this->set(compact('findDatas'));
+ }
 
     /**
      * Edit method
@@ -236,7 +249,7 @@ class RequestSlipsController extends AppController
           ];
           //pr($where);exit;
           $materialTransfers=$this->paginate($this->RequestSlips->find()
-          ->where([$where,'RequestSlips.is_deleted'=>'0','RequestSlips.employee_id'=>$this->Auth->User('id')])->order(['RequestSlips.id'=>'DESC']));
+          ->where([$where,'RequestSlips.is_deleted'=>'0'])->order(['RequestSlips.id'=>'DESC']));
 
           if(!empty($materialTransfers->toArray()))
           {

@@ -83,7 +83,7 @@ $(document).ready(function(){
      $(document).on('keyup','.qty',function(){
             var current_stock1 = $(this).closest('tr').find('select.material_id option:selected').val();
             if(current_stock1==''){
-                alert('Please Select Raw Material');
+                alert('Please Select Material');
                 $(this).closest('tr').find('td input.qty').val('');
             }
             else{

@@ -75,7 +75,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th scope="col"><?= ('S.No.') ?></th>
-                                                                <th scope="col"><?= ('Raw Material') ?></th>
+                                                                <th scope="col"><?= ('Material') ?></th>
                                                                 <th scope="col"><?= ('Quantity') ?></th>
                                                                 <th scope="col" class="actions"><?= __('Description') ?></th>
                                                             </tr>

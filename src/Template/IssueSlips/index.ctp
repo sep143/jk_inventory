@@ -42,6 +42,7 @@
                         </div><br></br>
                 <?php if($data_exist=='data_exist') { ?>
                 <div class="form-group">
+                
                    <?php $page_no=$this->Paginator->current('issueSlips'); $page_no=($page_no-1)*20; ?>
                     <table cellpadding="0" cellspacing="0" class="table">
                         <thead>

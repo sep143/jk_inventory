@@ -56,7 +56,7 @@
             <td>1</td>  
             <td>
                 <?php echo $this->Form->control('row_material_id',['options' => $rowMaterials,
-                'label' => false,'class'=>'selectadd material_id','empty'=>'Select Raw Material','style'=>'width:300px;']);?>
+                'label' => false,'class'=>'selectadd material_id','empty'=>'Select Material','style'=>'width:300px;']);?>
             </td>
             <td>
                 <?php echo $this->Form->control('quantity',[
