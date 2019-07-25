@@ -214,6 +214,7 @@ class RequisitionSlipsController extends AppController
 	* category select then meterial get category wise
 	*/
 	public function meterialShow($cat_id=null){
+        
 		//  $this->viewBuilder()->setLayout('');
 		// $findDatas =  $this->RequisitionSlips->RequisitionSlipRows->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
         // $this->set(compact('findDatas'));
