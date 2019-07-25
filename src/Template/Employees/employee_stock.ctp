@@ -81,6 +81,9 @@ $companies->gstin .'</span></td></tr></table>';
             ?>
             <div class="box-body">
                 <div class="form-group">
+                <?php if(!empty($employeename)){
+                    echo '<h3>Name: '.$employeename->name.'</h3>';
+                } ?>
                    <?php $page_no=$this->Paginator->current('Employees'); $page_no=($page_no-1)*20; ?>
             <table id="example1" class="table" <?php if($status == 'excel'){ ?> border="1" <?php } ?>>
                             <thead>

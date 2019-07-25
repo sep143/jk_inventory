@@ -38,7 +38,8 @@ class ReturnSlipRowsTable extends Table
         $this->setTable('return_slip_rows');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-
+        $this->belongsTo('RowMaterialCategories');
+        $this->belongsTo('Units');
         $this->belongsTo('ReturnSlips', [
             'foreignKey' => 'return_slip_id',
             'joinType' => 'INNER'

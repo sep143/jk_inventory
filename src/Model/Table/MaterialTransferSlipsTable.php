@@ -39,6 +39,7 @@ class MaterialTransferSlipsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
         $this->belongsTo('RequestSlips');
+        $this->belongsTo('companies');
 
         $this->belongsTo('Employees', [
             'foreignKey' => 'employee_id',

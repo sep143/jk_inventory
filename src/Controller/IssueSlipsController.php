@@ -46,7 +46,7 @@ class IssueSlipsController extends AppController
                 }
           $this->set(compact('where'));
           $this->paginate = [
-            'contain' => ['Employees','IssueSlipRows'=>'RowMaterials']
+            'contain' => ['Employees','IssueSlipRows'=>['RowMaterials'=>['Units']]]
           ];
           $issueSlips = $this->paginate($this->IssueSlips->find()->where([$where,'IssueSlips.is_deleted'=>'0','IssueSlips.created_by'=>$this->Auth->User('id')]));
           if(!empty($issueSlips->toArray()))
@@ -180,7 +180,7 @@ class IssueSlipsController extends AppController
               ->group('row_material_id')
               ->enableAutoFields(true); 
           }]);
-     //   pr($row_material_list->toArray());exit;
+      //  pr($row_material_list->toArray());exit;
         $rowMaterial=[];
         foreach ($row_material_list as $row_materials) {
           $rowMaterial[]=['value' => $row_materials->id,'text' => $row_materials->name.' ('.$row_materials->unit->name.')','current_stock'=>@$row_materials->stock_ledgers[0]->total_in - @$row_materials->stock_ledgers[0]->total_out];
@@ -200,7 +200,35 @@ class IssueSlipsController extends AppController
 	*/
 	public function meterialShow($cat_id=null){
     $this->viewBuilder()->setLayout('');
-   $findDatas =  $this->IssueSlips->IssueSlipRows->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
+
+    $query=$this->IssueSlips->IssueSlipRows->RowMaterials->find()->where(['row_material_category_id'=>$cat_id]);
+       $row_material_list = $query
+       ->contain(['Units','StockLedgers'=>function($query){
+          $totalInCase = $query->newExpr()
+              ->addCase(
+                $query->newExpr()->add(['status' => 'In','department_id' => $this->Auth->User('department_id')]),
+                $query->newExpr()->add(['quantity']),
+                'integer'
+              );
+              $totalOutCase = $query->newExpr()
+              ->addCase(
+                $query->newExpr()->add(['status' => 'Out','department_id' => $this->Auth->User('department_id')]),
+                $query->newExpr()->add(['quantity']),
+                'integer'
+              );
+              return $query->select([
+                'total_in' => $query->func()->sum($totalInCase),
+                'total_out' => $query->func()->sum($totalOutCase),'id','row_material_id'
+              ])
+              ->group('row_material_id')
+              ->enableAutoFields(true); 
+          }]);
+       
+        $findDatas=[];
+        foreach ($row_material_list as $row_materials) {
+          $findDatas[]=['value' => $row_materials->id,'text' => $row_materials->name.' ('.$row_materials->unit->name.')','current_stock'=>@$row_materials->stock_ledgers[0]->total_in - @$row_materials->stock_ledgers[0]->total_out];
+        }
+
    $this->set(compact('findDatas'));
  }
 

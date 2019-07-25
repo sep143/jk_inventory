@@ -46,7 +46,7 @@ class ReturnSlipsController extends AppController
                 }
         $this->set(compact('where'));
         $this->paginate = [
-            'contain' => ['Employees','ReturnSlipRows'=>'RowMaterials']
+            'contain' => ['Employees','ReturnSlipRows'=>['RowMaterials'=>['Units']]]
         ];
         $returnSlips = $this->paginate($this->ReturnSlips->find()->where([$where,'ReturnSlips.is_deleted'=>'0','ReturnSlips.created_by'=>$this->Auth->User('id')]));
         if(!empty($returnSlips->toArray()))
@@ -57,9 +57,9 @@ class ReturnSlipsController extends AppController
             $data_exist='No Record Found';
           }
         }
-        
+        $companies=$this->ReturnSlips->Companies->get(1,['contain'=> ['States']]);
         $employees = $this->ReturnSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id, 'Employees.is_deleted '=>0]);;
-        $this->set(compact('returnSlips','employees','return_data','data_exist'));
+        $this->set(compact('returnSlips','employees','return_data','data_exist','companies'));
     }
 
     /**
@@ -88,12 +88,17 @@ class ReturnSlipsController extends AppController
         $user_id = $this->Auth->User('id');
         $department_id = $this->Auth->User('department_id');
               $employee_id=$this->request->getQuery('employee-id');
-                //pr($employee_id);exit;
-                $stockledgerData = $this->ReturnSlips->StockLedgers->find()->where(['StockLedgers.employee_id' => $employee_id]);
-                
+              $voucher=$this->request->getQuery('voucher');
+              $issueSlipid = $voucher;
+                // pr($employee_id);exit;
+                $IssueSlipRows = $this->ReturnSlips->IssueSlips->get($voucher,
+                    ['contain' => ['IssueSlipRows'=>['RowMaterials']],
+                    ['where' => ['IssueSlips.employee_id' => $employee_id]]]
+                );
+              //  pr($IssueSlipRows->toArray()); exit;
                 $this->loadModel('StockLedgers');
 
-                $query=$this->StockLedgers->find()->where(['employee_id' =>$employee_id]);
+                $query=$this->StockLedgers->find()->where(['employee_id' =>$employee_id,'StockLedgers.issue_slip_id'=>$voucher]);
                 $totalInCase = $query->newExpr()
                   ->addCase(
                     $query->newExpr()->add(['status' => 'In','employee_id' =>$employee_id]),
@@ -114,13 +119,60 @@ class ReturnSlipsController extends AppController
                  ->group('row_material_id')
                  ->contain(['RowMaterials'])
                  ->enableAutoFields(true); 
-                //pr($query->toArray());exit;
-            $this->set(compact('query','employee_id'));
+             //   pr($query->toArray());exit;
+/////////////start
+
+$vouchers = $this->ReturnSlips->IssueSlips->find()->where(['IssueSlips.employee_id ='=>$employee_id,'IssueSlips.id '=>$voucher, 'IssueSlips.is_deleted '=>0])->contain(['IssueSlipRows']);
+$vouchers_Datas = $this->ReturnSlips->find()->where(['ReturnSlips.employee_id ='=>$employee_id, 'ReturnSlips.is_deleted '=>0])->contain(['ReturnSlipRows']);
+
+$voucher_id = []; 
+$ISIds = [];
+$stock_total_IS = [];
+$stock_total_ItemWise = [];
+$stock_total_RS = [];
+
+foreach($vouchers as $datas){
+    $ISIds[$datas->id] = $datas->id;
+    foreach($datas->issue_slip_rows as $data){
+        $stock_total_IS[$data->id] += $data->quantity;
+        $stock_total_ItemWise[$datas->row_material_id] = $data->quantity;
+    }
+}
+// pr($stock_total_IS);
+$voucher_quantity=[];
+foreach($vouchers_Datas as $vouchersdata){
+    foreach($vouchersdata->return_slip_rows as $return_slip_row){
+         if(in_array($vouchersdata->issue_slip_id,$ISIds)){
+            $stock_total_RS[$return_slip_row->issue_slip_row_id] += $return_slip_row->quantity;
+            $voucher_quantity[$return_slip_row->row_material_id] += $return_slip_row->quantity;
+        }
+    }
+}
+$voucher_id=[];
+foreach($vouchers as $datass){
+    // pr($datass->issue_slip_rows);
+    foreach($datass->issue_slip_rows as $rowdata){
+        // pr($rowdata);
+        if($stock_total_IS[$rowdata->id] > $stock_total_RS[$rowdata->id]){
+            $voucher_id[$rowdata->row_material_id] = $rowdata->row_material_id;
+            
+        }
+    }
+    
+}
+ //pr($voucher_quantity);
+// pr($stock_total_IS);
+// pr($stock_total_RS);
+ //exit;
+
+///////////end
+             
+            $this->set(compact('query','employee_id','IssueSlipRows','voucher_id','voucher_quantity'));
             $returnSlip = $this->ReturnSlips->newEntity();
 
           if ($this->request->is('post')) {
             $returnSlip = $this->ReturnSlips->patchEntity($returnSlip, $this->request->getData());
-            //pr($this->request->getData());exit;
+            // pr($this->request->getData());exit;
             $returnSlip->transaction_date=date('Y-m-d',strtotime($this->request->getData('transaction_date')));
             $query=$this->ReturnSlips->find();
             $invoice_first=$query->select(['max_value'=>$query->func()->max('voucher_no')])->toArray();
@@ -132,13 +184,36 @@ class ReturnSlipsController extends AppController
             $depts=$this->ReturnSlips->Employees->find()->select('department_id')->where(['Employees.id'=>$emp_id])->first();
             
             $emp_dept_id=$depts->department_id;
-            //pr($returnSlip);exit;
+            $returnSlip->issue_slip_id=$issueSlipid;
+           
+        //    pr($returnSlip);exit;
             if ($this->ReturnSlips->save($returnSlip)) {
+                $this->ReturnSlips->ReturnSlipRows->deleteAll(['return_slip_id'=>$returnSlip->id]);
+                
+                foreach($returnSlip->return_slip_rows as $retrun_slip_row_in){
+                    if(!empty($retrun_slip_row_in->quantity)){
+                        $return_slip_row1 = $this->ReturnSlips->ReturnSlipRows->newEntity();
+                        $return_slip_row1->return_slip_id = $retrun_slip_row_in->return_slip_id;
+                        $return_slip_row1->issue_slip_row_id = $retrun_slip_row_in->issue_slip_row_id;
+                        $return_slip_row1->row_material_id = $retrun_slip_row_in->row_material_id;
+                        $return_slip_row1->quantity = $retrun_slip_row_in->quantity;
+                        $return_slip_row1->return_scrab = $retrun_slip_row_in->return_scrab;
+                        $return_slip_row1->description = $retrun_slip_row_in->description;
+                        //pr($return_slip_row1);
+                        $this->ReturnSlips->ReturnSlipRows->save($return_slip_row1);
+                    }
+                    
+                }
+                //pr($returnSlip->id);exit;
+               
                 foreach ($returnSlip->return_slip_rows as  $return_slip_row) 
                 {
-                    if($return_slip_row->return_scrab=='Return') 
+                   
+                    if($return_slip_row->return_scrab=='Return' && !empty($return_slip_row->quantity)) 
                     {
+                        // pr($return_slip_row->return_scrab);
                         $stockledger = $this->ReturnSlips->StockLedgers->newEntity();
+                       
                         $stockledger->return_slip_id=$return_slip_row->return_slip_id;
                         $stockledger->return_slip_row_id=$return_slip_row->id;
                         $stockledger->transaction_date=$returnSlip->transaction_date;
@@ -149,9 +224,13 @@ class ReturnSlipsController extends AppController
                         $stockledger->department_id=$this->Auth->User('department_id');
                         $stockledger->employee_id=$this->Auth->User('id');
                         $stockledger->status='In';
-                        $this->ReturnSlips->StockLedgers->save($stockledger);
+                        
+                     $this->ReturnSlips->StockLedgers->save($stockledger);
+                         
+                        // pr($stockledgerss);
+                        
                     }
-                    if($return_slip_row->return_scrab=='Scrape') 
+                    if($return_slip_row->return_scrab=='Scrape' && !empty($return_slip_row->quantity)) 
                     {
                     $stockledger = $this->ReturnSlips->StockLedgers->newEntity();
                     $stockledger->return_slip_id=$return_slip_row->return_slip_id;
@@ -167,28 +246,30 @@ class ReturnSlipsController extends AppController
                        $stockledger->is_scrab='1';
                     }
                     $stockledger->status='In';
-                    $this->ReturnSlips->StockLedgers->save($stockledger);
+                   $this->ReturnSlips->StockLedgers->save($stockledger);
 
                     }
 
-                }
+                } 
                 foreach ($returnSlip->return_slip_rows as  $return_slip_row) 
                 {
-                    $stockledger = $this->ReturnSlips->StockLedgers->newEntity();
-                    $stockledger->return_slip_id=$return_slip_row->return_slip_id;
-                    $stockledger->return_slip_row_id=$return_slip_row->id;
-                    $stockledger->transaction_date=$returnSlip->transaction_date;
-                    $stockledger->row_material_id=$return_slip_row->row_material_id;
-                    $stockledger->quantity=$return_slip_row->quantity;
-                    $stockledger->description=$return_slip_row->description;
-                    $stockledger->department_id=$emp_dept_id;
-                    $stockledger->employee_id=$returnSlip->employee_id;
-                    $stockledger->created_by=$user_id;
-                     if($return_slip_row->return_scrab=='Scrape') {
-                       $stockledger->is_scrab='1';
-                    }
-                    $stockledger->status='Out';
-                    $this->ReturnSlips->StockLedgers->save($stockledger);
+                    if(!empty($return_slip_row->quantity)){
+                            $stockledger = $this->ReturnSlips->StockLedgers->newEntity();
+                            $stockledger->return_slip_id=$return_slip_row->return_slip_id;
+                            $stockledger->return_slip_row_id=$return_slip_row->id;
+                            $stockledger->transaction_date=$returnSlip->transaction_date;
+                            $stockledger->row_material_id=$return_slip_row->row_material_id;
+                            $stockledger->quantity=$return_slip_row->quantity;
+                            $stockledger->description=$return_slip_row->description;
+                            $stockledger->department_id=$emp_dept_id;
+                            $stockledger->employee_id=$returnSlip->employee_id;
+                            $stockledger->created_by=$user_id;
+                            if($return_slip_row->return_scrab=='Scrape') {
+                            $stockledger->is_scrab='1';
+                            }
+                            $stockledger->status='Out';
+                            $this->ReturnSlips->StockLedgers->save($stockledger);
+                     }
                 }
                 $this->Flash->success(__('The return slip has been saved.'));
 
@@ -201,6 +282,7 @@ class ReturnSlipsController extends AppController
             $employees = $this->ReturnSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id]);
         $this->set(compact('returnSlip', 'employees','returnaction','rowMaterial'));
     }
+
     public function returnSearchEmp()
     {
           $user_id = $this->Auth->User('id');
@@ -209,11 +291,53 @@ class ReturnSlipsController extends AppController
             {
                 //pr($this->request->query('employee_id'));exit;
                 $employee_id=$this->request->getQuery('employee_id');
-                return $this->redirect(['action' => 'add?employee_id='.$employee_id]);
+                $Voucher=$this->request->getQuery('Voucher');
+                return $this->redirect(['action' => 'add?employee_id='.$employee_id.'&Voucher='.$Voucher]);
             }
         
           $employees = $this->ReturnSlips->Employees->find('list')->where(['Employees.id <>'=>$user_id, 'Employees.is_deleted '=>0]);
           $this->set(compact('employees'));
+    }
+
+    public function VoucherShow($emp_id=null){
+        $this->viewBuilder()->setLayout('');
+        $user_id = $this->Auth->User('id');
+        $vouchers = $this->ReturnSlips->IssueSlips->find()->where(['IssueSlips.employee_id ='=>$emp_id, 'IssueSlips.is_deleted '=>0])->contain(['IssueSlipRows']);
+        $vouchers_Datas = $this->ReturnSlips->find()->where(['ReturnSlips.employee_id ='=>$emp_id, 'ReturnSlips.is_deleted '=>0])->contain(['ReturnSlipRows']);
+
+        $voucher_id = []; 
+        $ISIds = [];
+        $stock_total_IS = [];
+        $stock_total_ItemWise = [];
+        $stock_total_RS = [];
+
+        foreach($vouchers as $datas){
+            $ISIds[$datas->id] = $datas->id;
+            foreach($datas->issue_slip_rows as $data){
+                $stock_total_IS[$datas->id] += $data->quantity;
+                $stock_total_ItemWise[$datas->row_material_id] = $data->quantity;
+            }
+        }
+        
+        foreach($vouchers_Datas as $vouchersdata){
+            foreach($vouchersdata->return_slip_rows as $return_slip_row){
+                 if(in_array($vouchersdata->issue_slip_id,$ISIds)){
+                    $stock_total_RS[$vouchersdata->issue_slip_id] += $return_slip_row->quantity;
+                }
+            }
+        }
+
+        foreach($vouchers as $datass){
+            if($stock_total_IS[$datass->id] > $stock_total_RS[$datass->id]){
+                $voucher_id[] = ['value'=>$datass->id,'text'=>$datass->voucher_no];
+            }
+          
+        }
+        
+
+       $voucher = $voucher_id;
+      
+          $this->set(compact('voucher'));
     }
 
     /**
@@ -429,6 +553,7 @@ class ReturnSlipsController extends AppController
         $employees = $this->ReturnSlips->Employees->find('list');
         $this->set(compact('returnSlips','employees','return_data','data_exist'));
     }
+
     public function stockRegisterReport()
     {
         $stock_register = $this->ReturnSlips->StockLedgers->newEntity();

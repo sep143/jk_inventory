@@ -33,16 +33,7 @@ class ReturnSlip extends Entity
      * @var array
      */
     protected $_accessible = [
-        'voucher_no' => true,
-        'employee_id' => true,
-        'transaction_date' => true,
-        'created_on' => true,
-        'created_by' => true,
-        'edited_on' => true,
-        'edited_by' => true,
-        'is_deleted' => true,
-        'employee' => true,
-        'return_slip_rows' => true,
-        'stock_ledgers' => true
+        '*' => true,
+        'id' => false
     ];
 }

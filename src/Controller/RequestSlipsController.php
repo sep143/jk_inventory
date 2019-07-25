@@ -46,7 +46,7 @@ class RequestSlipsController extends AppController
                 }
           $this->set(compact('where'));
           $this->paginate = [
-            'contain' => ['RequestSlipRows'=>'RowMaterials','Employees','Creaters']
+            'contain' => ['RequestSlipRows'=>['RowMaterials'=>['Units']],'Employees','Creaters']
           ];
           $materialTransfers=$this->paginate($this->RequestSlips->find()
           ->where([$where,'RequestSlips.is_deleted'=>'0','RequestSlips.created_by'=>$this->Auth->User('id')])->order(['RequestSlips.id'=>'DESC']));

@@ -128,7 +128,7 @@
                                                             <tr>
                                                                 <td><?php echo  $j; ?></td>
                                                                 <td><?php echo $goodR_receive_rows->row_material->name ;?></td>
-                                                                <td><?php echo $goodR_receive_rows->quantity ;?></td> 
+                                                                <td><?php echo $goodR_receive_rows->quantity.' '.$goodR_receive_rows->row_material->unit->name ;?></td> 
                                                                 <td><?php echo $goodR_receive_rows->rate ;?></td> 
                                                                 <td><?php echo $goodR_receive_rows->amount ;?></td>
                                                             </tr>

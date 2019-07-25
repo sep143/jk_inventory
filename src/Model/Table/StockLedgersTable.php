@@ -193,7 +193,7 @@ class StockLedgersTable extends Table
         $rules->add($rules->existsIn(['issue_slip_id'], 'IssueSlips'));
         $rules->add($rules->existsIn(['issue_slip_row_id'], 'IssueSlipRows'));
         $rules->add($rules->existsIn(['return_slip_id'], 'ReturnSlips'));
-        $rules->add($rules->existsIn(['return_slip_row_id'], 'ReturnSlipRows'));
+       // $rules->add($rules->existsIn(['return_slip_row_id'], 'ReturnSlipRows'));
         $rules->add($rules->existsIn(['material_transfer_slip_id'], 'MaterialTransferSlips'));
         $rules->add($rules->existsIn(['material_transfer_slip_row_id'], 'MaterialTransferSlipRows'));
 

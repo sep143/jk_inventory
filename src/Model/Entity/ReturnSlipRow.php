@@ -29,13 +29,7 @@ class ReturnSlipRow extends Entity
      * @var array
      */
     protected $_accessible = [
-        'return_slip_id' => true,
-        'row_material_id' => true,
-        'quantity' => true,
-        'return_scrab' => true,
-        'return_slip' => true,
-        'description' => true,
-        'row_material' => true,
-        'stock_ledgers' => true
+        '*' => true,
+        'id' => false
     ];
 }

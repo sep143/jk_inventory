@@ -363,7 +363,10 @@ class EmployeesController extends AppController
        $companies=$this->Employees->Companies->get(1,['contain'=> ['States']]);
 
         $employee=$this->Employees->find('list');
-        $this->set(compact('row_material_list','employee','department_id','companies','url','status')); 
+        if(!empty($employe))
+        $employeename=$this->Employees->get($employe);
+        // pr($employeename->name); exit;
+        $this->set(compact('row_material_list','employee','department_id','companies','url','status','employeename')); 
     }
     
     
@@ -455,8 +458,10 @@ class EmployeesController extends AppController
         //$mystocks=$this->Employees->StockLedgers->find()->where(['StockLedgers.employee_id'=>$loginId,'StockLedgers.department_id'=>$department_id,'StockLedgers.status'=>'In'])->contain(['RowMaterials']);
         //pr($mystocks->toArray());exit;
         $department=$this->Employees->Departments->find('list');
+        if(!empty($dep))
+        $departmentname=$this->Employees->Departments->get($dep);
         $companies=$this->Employees->Companies->get(1,['contain'=> ['States']]);
-        $this->set(compact('row_material_list','department','po_data','department_id','companies','url','status')); 
+        $this->set(compact('row_material_list','department','po_data','department_id','companies','url','status','departmentname')); 
     }
 
     public function forgotPassword() 
@@ -617,7 +622,7 @@ class EmployeesController extends AppController
         $this->set(compact('row_material_list','itemConsumption','rowMaterial','usedDatas','RowMaterialCategory')); 
     }
 
-      /*
+    /*
 	* category select then meterial get category wise with current_stock calulate then on page jquery to check stock in enter qnty.
 	*/
 	public function meterialShow($cat_id=null){
@@ -630,5 +635,5 @@ class EmployeesController extends AppController
         }
        //$findDatas =  $this->Employees->StockLedgers->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
        $this->set(compact('findDatas'));
-     }
+    }
 }

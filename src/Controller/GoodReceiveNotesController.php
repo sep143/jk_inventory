@@ -49,7 +49,7 @@ class GoodReceiveNotesController extends AppController
                 }
             $this->set(compact('where'));
             $this->paginate = [
-            'contain' => ['GoodReceiveNoteRows'=>'RowMaterials','PurchaseOrders'=>['PurchaseOrderRows','Vendors'],'Creaters','Inspectors']
+            'contain' => ['GoodReceiveNoteRows'=>['RowMaterials'=>['Units']],'PurchaseOrders'=>['PurchaseOrderRows','Vendors'],'Creaters','Inspectors']
             ];
             $goodReceiveNotes = $this->paginate($this->GoodReceiveNotes->find()->where([$where,'GoodReceiveNotes.is_deleted'=>'0']));
             //pr($goodReceiveNotes->toArray());exit;

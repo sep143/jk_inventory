@@ -35,38 +35,40 @@
                                                 <th> Quantity</th>
                                                 <th> Status</th>
                                                 <th> Particulars</th>
+                                                
                                             </tr>
                                         </thead>
                                         <tbody id=""> 
-                                            <?php $j=0; $i=1;foreach($query as $qdata) {
-
-                                            if($qdata->total_in >  $qdata->total_out)
-                                              {  
+                                            <?php $j=0; $i=1;foreach($IssueSlipRows->issue_slip_rows as $qdata) { 
+                                                    if($voucher_id[$qdata->row_material_id]){
+                                              
                                              ?>
-                                            <tr>
+                                            <tr class="main_tr1">
                                                 <td><?= $i; ?></td>  
                                                 <td>
-                                                     <?php echo $this->Form->hidden('return_slip_rows.'.$j.'.row_material_id',['value'=>$qdata->row_material_id]);  ?>
+                                                     <?php echo $this->Form->hidden('return_slip_rows.'.$j.'.row_material_id',['value'=>$qdata->row_material_id,'class'=>'itemClass']);  ?>
+                                                     <?php echo $this->Form->hidden('return_slip_rows.'.$j.'.issue_slip_row_id',['value'=>$qdata->id,'class'=>'IdClass']);  ?>
 
                                                     <label> <?= $qdata->row_material->name?></label>
                                                 </td>
                                                 <td>
                                                     <label class="balance"> 
-                                                        <?= $qdata->total_in-$qdata->total_out ?>
+                                                        <?= $qdata->quantity- $voucher_quantity[$qdata->row_material_id]?>
                                                     </label>
                                                 </td>
                                                 <td>
                                                     <?php echo $this->Form->control('return_slip_rows.'.$j.'.quantity',[
-                                                    'label' => false,'class'=>'form-control qty','placeholder'=>'Enter quantity','type'=>'text','required']);?>
+                                                    'label' => false,'class'=>'form-control qty','placeholder'=>'Enter quantity','type'=>'text']);?>
                                                 </td>
                                                 <td>
                                                     <?php echo $this->Form->control('return_slip_rows.'.$j.'.return_scrab',['options' => $returnaction,
-                                                    'label' => false,'class'=>'select2','empty'=>'Select Status','style'=>'width:200px;','required']);?>
+                                                    'label' => false,'class'=>'select2 returnAction','empty'=>'Select Status','style'=>'width:200px;']);?>
                                                 </td>
                                                 <td>
                                                     <?php echo $this->Form->control('return_slip_rows.'.$j.'.description',[
                                                     'label' => false,'class'=>'form-control ','placeholder'=>'Enter Particulars','type'=>'textarea','rows'=>'3','style'=>'resize:none;']);?>
                                                 </td>
+                                                
                                             </tr>
                                         <?php $i++; $j++;} } ?>
                                         </tbody>
@@ -94,6 +96,7 @@
 <?= $this->element('selectpicker') ?> 
 <?= $this->element('datepicker') ?> 
 <?= $this->element('validate') ?> 
+
 <?php
 $js="
 $(document).ready(function(){
@@ -104,13 +107,32 @@ $(document).ready(function(){
             if(qty>current_stock){
                 alert('Quantity Exceed');
                 $(this).closest('tr').find('td input.qty').val('');
+                $(this).closest('tr').find('td select.returnAction').removeAttr('required');
             }
-            else{
-
+            if(qty){
+                if(qty>current_stock){
+                    $(this).closest('tr').find('td select.returnAction').removeAttr('required');
+                }else{
+                    $(this).closest('tr').find('td select.returnAction').attr('required','true');
+                }
+                
+            }else{
+                
+                $(this).closest('tr').find('td select.returnAction').removeAttr('required');
             }
- 
-        });  
+           
+        });
 
+        // $(document).on('change','.qty', function(){
+        //     var qty = parseInt($(this).closest('tr').find('td input.qty').val()); 
+        //     alert(qty);
+        //     if(qty){
+        //         $(this).closest('tr').find('td input.returnAction').css({'required'=>true});
+        //     }else{
+        //         $(this).closest('tr').find('td input.returnAction').css({'required'=>false});
+        //     }
+        // });
+       
   $('#ServiceForm').validate({ 
         rules: {
             transaction_date: {
@@ -126,6 +148,24 @@ $(document).ready(function(){
             form.submit();
         }
     });
+    function rename_rows(){
+     var i =0;
+     var p=0; 
+     $('#main_table1 tbody tr.main_tr1').each(function()
+     { 
+         $(this).find('td:nth-child(1)').html(++p);
+          $(this).find('td:nth-child(2) input.itemClass').attr({name:'return_slip_rows['+i+'][row_material_id]'});
+          $(this).find('td:nth-child(2) input.IdClass').attr({name:'return_slip_rows['+i+'][issue_slip_row_id]'});
+          $(this).find('td:nth-child(3) select.selectadd').attr({name:'issue_slip_rows['+i+'][row_material_id]'});
+          $(this).find('td:nth-child(3) select.selectadd').select2();
+          $(this).find('td:nth-child(4) input').attr({name:'issue_slip_rows['+i+'][quantity]'});
+          $(this).find('td:nth-child(5) textarea').attr({name:'issue_slip_rows['+i+'][description]'});
+                     
+         i++;
+      });
+    
+    
+    }
 });
     ";
      $this->Html->scriptBlock($js,['block'=>'block_js']);

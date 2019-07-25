@@ -37,6 +37,7 @@ class IssueSlipsTable extends Table
 
         $this->setTable('issue_slips');
         $this->setDisplayField('id');
+        $this->setDisplayField('voucher_no');
         $this->setPrimaryKey('id');
         $this->belongsTo('companies');
         $this->belongsTo('Employees', [

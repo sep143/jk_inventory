@@ -91,7 +91,7 @@
                                                                 <td style="width:10%;"><?php echo  $j; ?></td>
                                                                 <td style="width:25%;"><?php echo $requisitionSliprow->row_material->name ;?>
                                                                 </td>
-                                                                <td style="width:15%;"><?php echo $requisitionSliprow->quantity ;?>
+                                                                <td style="width:15%;"><?php echo $requisitionSliprow->quantity.' '.$requisitionSliprow->row_material->unit->name ;?>
                                                                 </td>
                                                                 <td style="width:45%;"><?php echo $requisitionSliprow->description; ?></td>
                                                             </tr>

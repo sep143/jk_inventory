@@ -125,7 +125,8 @@
                                                             <tr>
                                                                 <td><?php echo  $j; ?></td>
                                                                 <td><?php echo $issue_row->row_material->name ;?></td>
-                                                                <td><?php echo $issue_row->quantity ;?></td> <td><?php echo $issue_row->description ;?></td>
+                                                                <td><?php echo $issue_row->quantity.' '.$issue_row->row_material->unit->name ;?></td> 
+                                                                <td><?php echo $issue_row->description ;?></td>
                                                             </tr>
                                                              <?php $j++; } ?>
                                                         </tbody>

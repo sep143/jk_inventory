@@ -90,17 +90,22 @@
                                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                 <h4 class="modal-title"> Return Slip Details </h4>
                                               </div>
-                                              <div class="modal-body">
+                                              <div class="modal-body" id="printModel<?php echo $returnSlip->id ;?>">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <table cellpadding="0" cellspacing="0" class="table">
                                                         <thead>
+                                                        <?php
+                                                        echo '<tr style="font-size:14px; border:solid black;"><td colspan="5" align="center" style="text-align:center;">'.$companies->name .'<br/>' .$companies->address .',<br/>'. $companies->state->name .'</span><br/>
+                                                        <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
+                                                        $companies->gstin .'</span></td></tr>';
+                                                        ?>
                                                             <tr>
-                                                                <th scope="col"><?= $this->Paginator->sort('Sr.No') ?></th>
-                                                                <th scope="col"><?= $this->Paginator->sort('Material') ?></th>
-                                                                <th scope="col"><?= $this->Paginator->sort('Quantity') ?></th>
-                                                                <th scope="col"><?= $this->Paginator->sort('Status') ?></th>
-                                                                 <th scope="col"><?= $this->Paginator->sort('Particulars') ?></th>
+                                                                <th scope="col">Sr.No</th>
+                                                                <th scope="col">Material</th>
+                                                                <th scope="col">Quantity</th>
+                                                                <th scope="col">Status</th>
+                                                                 <th scope="col">Particulars</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -108,7 +113,7 @@
                                                             <tr>
                                                                 <td><?php echo  $j; ?></td>
                                                                 <td><?php echo $return_row->row_material->name ;?></td>
-                                                                <td><?php echo $return_row->quantity ;?></td> 
+                                                                <td><?php echo $return_row->quantity.' '.$return_row->row_material->unit->name ;?></td> 
                                                                 <td><?php echo $return_row->return_scrab ;?></td> 
                                                                 <td><?php echo $return_row->description ;?></td>
                                                             </tr>
@@ -120,6 +125,7 @@
                                                  
                                               </div>
                                               <div class="modal-footer">
+                                              <button type="button" class="btn btn-info" onclick="printDiv('printModel<?php echo $returnSlip->id ;?>')" >Print</button>
                                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                               </div>
                                             </div>
@@ -145,5 +151,19 @@
         </div>
     </div>
 </div>
+
+<script>
+function printDiv(divName) {
+   var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+     
+     document.body.innerHTML = printContents;
+
+     window.print();
+     document.body.innerHTML = originalContents;
+     document.location.reload();
+}
+</script>
+
 <?= $this->element('selectpicker') ?> 
 <?= $this->element('datepicker') ?> 

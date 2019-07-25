@@ -144,6 +144,7 @@ $(document).ready(function(){
 			i++;
          });
         }
+        
         $(document).on('change','.material_id',function(){
             var current_stock = $(this).closest('tr').find('select.material_id option:selected').attr('current_stock');
         });
