@@ -100,6 +100,10 @@
                                                         <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
                                                         $companies->gstin .'</span></td></tr>';
                                                         ?>
+                                                        <tr>
+                                                            <td colspan="2">Voucher No. - <?= 'RS-'.h($returnSlip->voucher_no) ?></td>
+                                                            <td colspan="3" style="text-align: right;">Transaction Date - <?= h($returnSlip->transaction_date) ?></td>
+                                                        <tr>
                                                             <tr>
                                                                 <th scope="col">Sr.No</th>
                                                                 <th scope="col">Material</th>

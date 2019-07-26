@@ -400,7 +400,7 @@ class IssueSlipsController extends AppController
                 }
           $this->set(compact('where'));
           $this->paginate = [
-            'contain' => ['Employees','IssueSlipRows'=>'RowMaterials']
+            'contain' => ['Employees','IssueSlipRows'=>['RowMaterials'=>['Units']]]
           ];
           $issueSlips = $this->paginate($this->IssueSlips->find()->where([$where,'IssueSlips.is_deleted'=>'0']));
           if(!empty($issueSlips->toArray()))

@@ -539,7 +539,7 @@ foreach($vouchers as $datass){
                 }
         $this->set(compact('where'));
         $this->paginate = [
-            'contain' => ['Employees','ReturnSlipRows'=>'RowMaterials']
+            'contain' => ['Employees','ReturnSlipRows'=>['RowMaterials'=>['Units']]]
         ];
         $returnSlips = $this->paginate($this->ReturnSlips->find()->where([$where,'ReturnSlips.is_deleted'=>'0']));
         if(!empty($returnSlips->toArray()))
@@ -550,8 +550,9 @@ foreach($vouchers as $datass){
             $data_exist='No Record Found';
           }
         }
+        $companies=$this->ReturnSlips->Companies->get(1,['contain'=> ['States']]);
         $employees = $this->ReturnSlips->Employees->find('list');
-        $this->set(compact('returnSlips','employees','return_data','data_exist'));
+        $this->set(compact('returnSlips','employees','return_data','data_exist','companies'));
     }
 
     public function stockRegisterReport()

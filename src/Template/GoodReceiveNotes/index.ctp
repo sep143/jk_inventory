@@ -115,6 +115,10 @@
                                                         <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
                                                         $companies->gstin .'</span></td></tr>';
                                                         ?>
+                                                        <tr>
+                                                            <td colspan="2">Voucher No. - <?= 'GRN-'.h($goodReceiveNote->voucher_no) ?></td>
+                                                            <td colspan="3" style="text-align: right;">Transaction Date - <?= h($goodReceiveNote->transaction_date) ?></td>
+                                                        <tr>
                                                             <tr>
                                                                 <th scope="col"><?= ('Sr.No') ?></th>
                                                                 <th scope="col"><?= ('Material') ?></th>
@@ -127,7 +131,7 @@
                                                         <?php $j=1; foreach ($goodReceiveNote->good_receive_note_rows as $goodR_receive_rows){ ?>
                                                             <tr>
                                                                 <td><?php echo  $j; ?></td>
-                                                                <td><?php echo $goodR_receive_rows->row_material->name ;?></td>
+                                                                <td style="width:40%;"><?php echo $goodR_receive_rows->row_material->name ;?></td>
                                                                 <td><?php echo $goodR_receive_rows->quantity.' '.$goodR_receive_rows->row_material->unit->name ;?></td> 
                                                                 <td><?php echo $goodR_receive_rows->rate ;?></td> 
                                                                 <td><?php echo $goodR_receive_rows->amount ;?></td>

@@ -320,7 +320,7 @@ class MaterialTransferSlipsController extends AppController
                 }
           $this->set(compact('where'));
           $this->paginate = [
-            'contain' => ['MaterialTransferSlipRows'=>'RowMaterials','Employees','Creaters']
+            'contain' => ['MaterialTransferSlipRows'=>['RowMaterials'=>['Units']],'Employees','Creaters']
           ];
           $materialTransfers=$this->paginate($this->MaterialTransferSlips->find()
           ->where([$where,'MaterialTransferSlips.is_deleted'=>'0'])->order(['MaterialTransferSlips.id'=>'DESC']));
@@ -336,6 +336,7 @@ class MaterialTransferSlipsController extends AppController
         //$materialTransferSlips = $this->paginate($this->MaterialTransferSlips);
         $creaters = $this->MaterialTransferSlips->Creaters->find('list');
         $employees = $this->MaterialTransferSlips->Employees->find('list');
-        $this->set(compact('employees','materialTransfers','po_data','data_exist','creaters'));
+        $companies=$this->MaterialTransferSlips->Companies->get(1,['contain'=> ['States']]);
+        $this->set(compact('employees','materialTransfers','po_data','data_exist','creaters','companies'));
     }
 }

@@ -113,6 +113,10 @@
                                                         <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
                                                         $companies->gstin .'</span></td></tr>';
                                                         ?>
+                                                         <tr>
+                                                            <td colspan="2">Voucher No. - <?= 'IS-'.h($issueSlip->voucher_no) ?></td>
+                                                            <td colspan="2" style="text-align: right;">Transaction Date - <?= h($issueSlip->transaction_date) ?></td>
+                                                        <tr>
                                                             <tr>
                                                                 <th scope="col">Sr.No</th>
                                                                 <th scope="col">Material</th>
@@ -123,10 +127,10 @@
                                                         <tbody>
                                                         <?php $j=1; foreach ($issueSlip->issue_slip_rows as $issue_row){ ?>
                                                             <tr>
-                                                                <td><?php echo  $j; ?></td>
-                                                                <td><?php echo $issue_row->row_material->name ;?></td>
-                                                                <td><?php echo $issue_row->quantity.' '.$issue_row->row_material->unit->name ;?></td> 
-                                                                <td><?php echo $issue_row->description ;?></td>
+                                                                <td style="width:10%;"><?php echo  $j; ?></td>
+                                                                <td style="width:35%;"><?php echo $issue_row->row_material->name ;?></td>
+                                                                <td style="width:25%;"><?php echo $issue_row->quantity.' '.$issue_row->row_material->unit->name ;?></td> 
+                                                                <td style="width:30%;"><?php echo $issue_row->description ;?></td>
                                                             </tr>
                                                              <?php $j++; } ?>
                                                         </tbody>

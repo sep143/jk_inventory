@@ -79,6 +79,10 @@
                                                         <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
                                                         $companies->gstin .'</span></td></tr>';
                                                         ?>
+                                                        <tr>
+                                                            <td colspan="">Voucher No. - <?= 'IS-'.h($issueSlip->voucher_no) ?></td>
+                                                            <td colspan="2" style="text-align: right;">Transaction Date - <?= h($issueSlip->transaction_date) ?></td>
+                                                        <tr>
                                                             <tr>
                                                                 <th scope="col">Sr.No</th>
                                                                 <th scope="col">Material</th>
@@ -90,7 +94,7 @@
                                                             <tr>
                                                                 <td><?php echo  $j; ?></td>
                                                                 <td><?php echo $issue_row->row_material->name ;?></td>
-                                                                <td><?php echo $issue_row->quantity ;?></td>
+                                                                <td><?php echo $issue_row->quantity.' '.$issue_row->row_material->unit->name ;?></td>
                                                             </tr>
                                                              <?php $j++; } ?>
                                                         </tbody>

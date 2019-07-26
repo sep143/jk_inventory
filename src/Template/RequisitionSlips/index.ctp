@@ -74,10 +74,14 @@
                                                         <table class="table" style="width:100%;">
                                                         <thead>
                                                         <?php
-                                                        echo '<tr style="font-size:14px; border:solid black;"><td colspan="5" align="center" style="text-align:center;">'.$companies->name .'<br/>' .$companies->address .',<br/>'. $companies->state->name .'</span><br/>
+                                                        echo '<tr style="font-size:14px; border:solid black;"><td colspan="4" align="center" style="text-align:center;">'.$companies->name .'<br/>' .$companies->address .',<br/>'. $companies->state->name .'</span><br/>
                                                         <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
                                                         $companies->gstin .'</span></td></tr>';
                                                         ?>
+                                                        <tr>
+                                                            <td colspan="2">Voucher No. - <?= 'RS-'.h($requisitionSlip->voucher_no) ?></td>
+                                                            <td colspan="2" style="text-align: right;">Transaction Date - <?= h($requisitionSlip->transaction_date) ?></td>
+                                                        <tr>
                                                             <tr>
                                                                 <th scope="col"><?= ('S.No.') ?></th>
                                                                 <th scope="col"><?= ('Material') ?></th>
@@ -89,7 +93,7 @@
                                                         <?php $j=1; foreach ($requisitionSlip->requisition_slip_rows as $requisitionSliprow){ ?>
                                                             <tr>
                                                                 <td style="width:10%;"><?php echo  $j; ?></td>
-                                                                <td style="width:25%;"><?php echo $requisitionSliprow->row_material->name ;?>
+                                                                <td style="width:30%;"><?php echo $requisitionSliprow->row_material->name ;?>
                                                                 </td>
                                                                 <td style="width:15%;"><?php echo $requisitionSliprow->quantity.' '.$requisitionSliprow->row_material->unit->name ;?>
                                                                 </td>

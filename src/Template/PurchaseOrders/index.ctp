@@ -88,6 +88,10 @@
                                                         <span> <i class="fa fa-phone" aria-hidden="true"></i>'.  $companies->phone_no . ' | Mobile : '. $companies->mobile .'<br/> GSTIN NO:'.
                                                         $companies->gstin .'</span></td></tr>';
                                                         ?>
+                                                        <tr>
+                                                            <td colspan="2">Voucher No. - <?= 'PO-'.h($purchaseOrder->voucher_no) ?></td>
+                                                            <td colspan="3" style="text-align: right;">Transaction Date - <?= h($purchaseOrder->transaction_date) ?></td>
+                                                        <tr>
                                                             <tr>
                                                                 <th scope="col"><?= ('Sr.No') ?></th>
                                                                 <th scope="col"><?= ('Material') ?></th>
@@ -100,7 +104,7 @@
                                                         <?php $j=1; foreach ($purchaseOrder->purchase_order_rows as $purchaseOrderrow){ ?>
                                                             <tr>
                                                                 <td><?php echo  $j; ?></td>
-                                                                <td><?php echo $purchaseOrderrow->row_material->name ;?></td>
+                                                                <td style="width:40%;"><?php echo $purchaseOrderrow->row_material->name ;?></td>
                                                                 <td><?php echo $purchaseOrderrow->quantity.' '.$purchaseOrderrow->row_material->unit->name ;?></td>
                                                                 <td><?php echo $purchaseOrderrow->rate; ?> &#8377;</td>
                                                                 <td><?php echo $purchaseOrderrow->amount; ?> &#8377;</td>
