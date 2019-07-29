@@ -215,7 +215,7 @@ class RequisitionSlipsController extends AppController
 	*/
 	public function meterialShow($cat_id=null){
 		//  $this->viewBuilder()->setLayout('');
-		// $findDatas =  $this->RequisitionSlips->RequisitionSlipRows->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
+		 $findDatas =  $this->RequisitionSlips->RequisitionSlipRows->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
         // $this->set(compact('findDatas'));
         $this->viewBuilder()->setLayout('');
 
@@ -242,10 +242,10 @@ class RequisitionSlipsController extends AppController
               ->enableAutoFields(true); 
           }]);
        
-        $findDatas=[];
-        foreach ($row_material_list as $row_materials) {
-          $findDatas[]=['value' => $row_materials->id,'text' => $row_materials->name.' ('.$row_materials->unit->name.')','current_stock'=>@$row_materials->stock_ledgers[0]->total_in - @$row_materials->stock_ledgers[0]->total_out];
-        }
+      //  $findDatas=[];
+    //    foreach ($row_material_list as $row_materials) {
+     //     $findDatas[]=['value' => $row_materials->id,'text' => $row_materials->name.' ('.$row_materials->unit->name.')','current_stock'=>@$row_materials->stock_ledgers[0]->total_in - @$row_materials->stock_ledgers[0]->total_out];
+      //  }
 
    $this->set(compact('findDatas'));
 	}
@@ -368,7 +368,7 @@ class RequisitionSlipsController extends AppController
             }
 
          $this->paginate = [
-            'contain' => ['RequisitionSlipRows'=>'RowMaterials','Creaters']];
+            'contain' => ['RequisitionSlipRows'=>['RowMaterials'=>['Units']],'Creaters']];
         $requisitionSlips = $this->paginate($this->RequisitionSlips->find()->where(['RequisitionSlips.status'=>'Pending','RequisitionSlips.is_deleted'=>'0'])->order(['RequisitionSlips.id'=>'DESC']));
 
 

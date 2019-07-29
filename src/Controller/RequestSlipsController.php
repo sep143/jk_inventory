@@ -170,8 +170,37 @@ class RequestSlipsController extends AppController
 	*/
 	public function meterialShow($cat_id=null){
     $this->viewBuilder()->setLayout('');
-   $findDatas =  $this->RequestSlips->RequestSlipRows->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
-   $this->set(compact('findDatas'));
+  // $findDatas =  $this->RequestSlips->RequestSlipRows->RowMaterials->find('list')->where(['row_material_category_id'=>$cat_id]);
+  // $this->set(compact('findDatas'));
+   
+    $query=$this->RequestSlips->RequestSlipRows->RowMaterials->find()->where(['row_material_category_id'=>$cat_id]);
+       $row_material_list = $query
+       ->contain(['Units','StockLedgers'=>function($query){
+          $totalInCase = $query->newExpr()
+              ->addCase(
+                $query->newExpr()->add(['status' => 'In','department_id' => $this->Auth->User('department_id')]),
+                $query->newExpr()->add(['quantity']),
+                'integer'
+              );
+              $totalOutCase = $query->newExpr()
+              ->addCase(
+                $query->newExpr()->add(['status' => 'Out','department_id' => $this->Auth->User('department_id')]),
+                $query->newExpr()->add(['quantity']),
+                'integer'
+              );
+              return $query->select([
+                'total_in' => $query->func()->sum($totalInCase),
+                'total_out' => $query->func()->sum($totalOutCase),'id','row_material_id'
+              ])
+              ->group('row_material_id')
+              ->enableAutoFields(true); 
+          }]);
+       
+        $findDatas=[];
+        foreach ($row_material_list as $row_materials) {
+          $findDatas[]=['value' => $row_materials->id,'text' => $row_materials->name.' ('.$row_materials->unit->name.')','current_stock'=>@$row_materials->stock_ledgers[0]->total_in - @$row_materials->stock_ledgers[0]->total_out];
+        }
+        $this->set(compact('findDatas'));
  }
 
     /**
@@ -245,7 +274,7 @@ class RequestSlipsController extends AppController
 
           $this->set(compact('where'));
           $this->paginate = [
-            'contain' => ['RequestSlipRows'=>'RowMaterials','Employees','Creaters']
+            'contain' => ['RequestSlipRows'=>['RowMaterials'=>['Units']],'Employees','Creaters']
           ];
           //pr($where);exit;
           $materialTransfers=$this->paginate($this->RequestSlips->find()
@@ -324,7 +353,7 @@ class RequestSlipsController extends AppController
 
           $this->set(compact('where'));
           $this->paginate = [
-            'contain' => ['RequestSlipRows'=>'RowMaterials','Employees','Creaters']
+            'contain' => ['RequestSlipRows'=>['RowMaterials'=>['Units']],'Employees','Creaters']
           ];
           //pr($where);exit;
           $materialTransfers=$this->paginate($this->RequestSlips->find()

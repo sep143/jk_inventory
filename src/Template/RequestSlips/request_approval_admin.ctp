@@ -204,7 +204,7 @@
                                                             <tr>
                                                                 <td><?php echo  $j; ?></td>
                                                                 <td><?php echo $return_row->row_material->name ;?></td>
-                                                                <td><?php echo $return_row->quantity ;?></td> 
+                                                                <td><?php echo $return_row->quantity.' '.$return_row->row_material->unit->name ;?></td> 
                                                             </tr>
                                                              <?php $j++; } ?>
                                                         </tbody>

@@ -84,7 +84,7 @@
                                                             <tr>
                                                                 <td><?php echo  $j; ?></td>
                                                                 <td><?php echo $requisitionSliprow->row_material->name ;?></td>
-                                                                <td><?php echo $requisitionSliprow->quantity ;?></td>
+                                                                <td><?php echo $requisitionSliprow->quantity.' '.$requisitionSliprow->row_material->unit->name ;?></td>
                                                                 <td><?php echo $requisitionSliprow->description; ?></td>
                                                             </tr>
                                                              <?php $j++; } ?>

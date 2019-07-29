@@ -378,7 +378,7 @@ class PurchaseOrdersController extends AppController
                 }
           $this->set(compact('where'));
            $this->paginate = [
-            'contain' => ['Vendors','PurchaseOrderRows'=>'RowMaterials']
+            'contain' => ['Vendors','PurchaseOrderRows'=>['RowMaterials'=>['Units']]]
           ];
           $purchaseOrders=$this->paginate($this->PurchaseOrders->find()
               ->innerJoinWith('PurchaseOrderRows')

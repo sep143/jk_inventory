@@ -198,7 +198,7 @@
                                                             <tr>
                                                                 <td><?php echo  $j; ?></td>
                                                                 <td><?php echo $purchaseOrderrow->row_material->name ;?></td>
-                                                                <td><?php echo $purchaseOrderrow->quantity ;?></td>
+                                                                <td><?php echo $purchaseOrderrow->quantity.' '.$purchaseOrderrow->row_material->unit->name ;?></td>
                                                                 <td><?php echo $purchaseOrderrow->rate; ?> &#8377;</td>
                                                                 <td><?php echo $purchaseOrderrow->amount; ?> &#8377;</td>
                                                             </tr>

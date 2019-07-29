@@ -28,7 +28,7 @@
                     <span class="help-block"></span> 
                     <div class="row">
                         <div class="col-md-12 material_ajax">
-                            <label class="control-label"> Material Category <span class="required" aria-required="true"> * </span></label>
+                            <label class="control-label"> Material <span class="required" aria-required="true"> * </span></label>
                             <?= $this->Form->control('row_material_id',array('options' => '','class'=>'select2 material_id','label'=>false,'style'=>'width:100%','empty'=>'Select Material','required')) ?>
                         </div>
                     </div>
