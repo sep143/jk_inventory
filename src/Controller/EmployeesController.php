@@ -287,6 +287,8 @@ class EmployeesController extends AppController
     public function employeeStock()
     {
         $department_id=$this->Auth->User('department_id');
+        $employee_id=$this->Auth->User('id');
+        
         $url=$this->request->here();
             $url=parse_url($url,PHP_URL_QUERY);
             $status=$this->request->query('status'); 
@@ -300,8 +302,10 @@ class EmployeesController extends AppController
         $to=$this->request->query('to');;
         $where =[];
         if(!empty($employe)){
-            $where['StockLedgers.employee_id'] = $employe ;
-            
+            $where['StockLedgers.employee_id'] = $employe;
+        }else{
+            $where['StockLedgers.employee_id'] = $employee_id;
+            $employe = $employee_id;
         }
         if(!empty($from)){
             $where['StockLedgers.transaction_date >='] = date('Y-m-d', strtotime($from));
@@ -332,34 +336,7 @@ class EmployeesController extends AppController
                     ->enableAutoFields(true)
                     ->where($where); 
             }]);
-                
-        // $query=$this->Employees->StockLedgers->RowMaterials->find();
         
-        // /*$dataaa=$this->Employees->StockLedgers->find()->select(['row_material_id'])->where(['StockLedgers.employee_id'=>$loginId,'StockLedgers.department_id'=>$department_id,'StockLedgers.status'=>'In']);*/
-
-        // //pr($dataaa->toArray());exit;
-        // $row_material_list = $query
-        // ->contain(['Units','StockLedgers'=>function($query){
-        //   $totalInCase = $query->newExpr()
-        //       ->addCase(
-        //         $query->newExpr()->add(['status' => 'In','employee_id'=>$this->Auth->User('id')]),
-        //         $query->newExpr()->add(['quantity']),
-        //         'integer'
-        //       );
-        //       $totalOutCase = $query->newExpr()
-        //       ->addCase(
-        //          $query->newExpr()->add(['status' => 'Out','employee_id'=>$this->Auth->User('id')]),
-        //         $query->newExpr()->add(['quantity']),
-        //         'integer'
-        //       );
-        //       return $query->select([
-        //         'total_in' => $query->func()->sum($totalInCase),
-        //         'total_out' => $query->func()->sum($totalOutCase),'id','row_material_id'
-        //       ])
-        //       ->group('row_material_id')
-        //       ->enableAutoFields(true); 
-        //     }]);
-      
        $companies=$this->Employees->Companies->get(1,['contain'=> ['States']]);
 
         $employee=$this->Employees->find('list');
@@ -375,8 +352,7 @@ class EmployeesController extends AppController
         //$po_data = $this->Employees->StockLedgers->RowMaterials->newEntity();
         $loginId=$this->Auth->User('id');
         $department_id=$this->Auth->User('department_id');
-        //pr($department_id);
-      
+        
         $url=$this->request->here();
             $url=parse_url($url,PHP_URL_QUERY);
             $status=$this->request->query('status'); 
@@ -390,15 +366,19 @@ class EmployeesController extends AppController
                 $where =[];
                 if(!empty($dep)){
                     $where['StockLedgers.department_id'] = $dep ;
-                    if(!empty($from)){
-                        $where['StockLedgers.transaction_date >='] = date('Y-m-d', strtotime($from));
-                        $where['StockLedgers.transaction_date <='] = date('Y-m-d', strtotime($to));
-                    }
+                }else{
+                    $where['StockLedgers.department_id'] = $department_id;
+                    $dep = $department_id;
+                }
+                if(!empty($from)){
+                    $where['StockLedgers.transaction_date >='] = date('Y-m-d', strtotime($from));
+                }
+                if(!empty($to)){
+                    $where['StockLedgers.transaction_date <='] = date('Y-m-d', strtotime($to));
                 }
                 //pr($employe);exit;
                 //$po_data = $this->Employees->StockLedgers->RowMaterials->newEntity();
                 $query=$this->Employees->StockLedgers->RowMaterials->find();
-               
                
                      $row_material_list = $query
                      ->contain(['Units','StockLedgers'=>function($query)use($dep){
@@ -422,41 +402,7 @@ class EmployeesController extends AppController
                       ->enableAutoFields(true)
                       ->where($where); 
                 }]);
-                
-                                         
-             
-            //  else
-            //  {
-            
-                
-            // $query=$this->Employees->StockLedgers->RowMaterials->find();
-            // $row_material_list = $query
-            //  ->contain(['Units','StockLedgers'=>function($query){
-            //   $totalInCase = $query->newExpr()
-            //      ->addCase(
-            //         $query->newExpr()->add(['status' => 'In','department_id' =>$this->Auth->User('department_id')]),
-            //         $query->newExpr()->add(['quantity']),
-            //         'integer'
-            //       );
-            //       //pr($totalInCase);exit;
-            //       $totalOutCase = $query->newExpr()
-            //       ->addCase(
-            //         $query->newExpr()->add(['status' => 'Out','department_id' => $this->Auth->User('department_id')]),
-            //         $query->newExpr()->add(['quantity']),
-            //         'integer'
-            //       );
-            //       return $query->select([
-            //         'total_in' => $query->func()->sum($totalInCase),
-            //         'total_out' => $query->func()->sum($totalOutCase),'id','row_material_id'
-            //       ])
-            //       ->group('row_material_id')
-            //       ->enableAutoFields(true); 
-            //     }]);
-            //  }
-        
-        //pr($row_material_list->toArray());exit;
-        //$mystocks=$this->Employees->StockLedgers->find()->where(['StockLedgers.employee_id'=>$loginId,'StockLedgers.department_id'=>$department_id,'StockLedgers.status'=>'In'])->contain(['RowMaterials']);
-        //pr($mystocks->toArray());exit;
+           
         $department=$this->Employees->Departments->find('list');
         if(!empty($dep))
         $departmentname=$this->Employees->Departments->get($dep);
@@ -628,7 +574,27 @@ class EmployeesController extends AppController
 	public function meterialShow($cat_id=null){
         $this->viewBuilder()->setLayout('');
         $query=$this->Employees->StockLedgers->RowMaterials->find()->where(['row_material_category_id'=>$cat_id]);
-        $row_material_list = $query;
+        $row_material_list = $query
+        ->contain(['Units','StockLedgers'=>function($query){
+           $totalInCase = $query->newExpr()
+               ->addCase(
+                 $query->newExpr()->add(['status' => 'In','department_id' => $this->Auth->User('department_id')]),
+                 $query->newExpr()->add(['quantity']),
+                 'integer'
+               );
+               $totalOutCase = $query->newExpr()
+               ->addCase(
+                 $query->newExpr()->add(['status' => 'Out','department_id' => $this->Auth->User('department_id')]),
+                 $query->newExpr()->add(['quantity']),
+                 'integer'
+               );
+               return $query->select([
+                 'total_in' => $query->func()->sum($totalInCase),
+                 'total_out' => $query->func()->sum($totalOutCase),'id','row_material_id'
+               ])
+               ->group('row_material_id')
+               ->enableAutoFields(true); 
+           }]);
         $findDatas=[];
         foreach ($row_material_list as $row_materials) {
           $findDatas[]=['value' => $row_materials->id,'text' => $row_materials->name.' ('.$row_materials->unit->name.')','current_stock'=>@$row_materials->stock_ledgers[0]->total_in - @$row_materials->stock_ledgers[0]->total_out];

@@ -44,11 +44,11 @@
                                             <tr class="main_tr1" >
                                                 <td><?php echo $i; ?></td>  
                                                <td>
-                                                <?php echo $this->Form->hidden('purchase_order_rows.'.$j.'.requisition_slip_id',['value'=>$reqslip->requisition_slip_id]);  ?>
+                                                <?php echo $this->Form->hidden('purchase_order_rows.'.$j.'.requisition_slip_id',['value'=>$reqslip->requisition_slip_id,'class'=>'requisition_slip_id']);  ?>
 
-                                                <?php echo $this->Form->hidden('purchase_order_rows.'.$j.'.requisition_slip_row_id',['value'=>$reqslip->id]);  ?>
+                                                <?php echo $this->Form->hidden('purchase_order_rows.'.$j.'.requisition_slip_row_id',['value'=>$reqslip->id,'class'=>'requisition_slip_row_id']);  ?>
 
-                                                    <?php echo $this->Form->hidden('purchase_order_rows.'.$j.'.row_material_id',['value'=>$reqslip->row_material_id]);  ?>
+                                                    <?php echo $this->Form->hidden('purchase_order_rows.'.$j.'.row_material_id',['value'=>$reqslip->row_material_id,'class'=>'row_material_ids']);  ?>
                                                     <label>
                                                         <?php echo @$reqslip->row_material->name; ?>
                                                     </label>
@@ -148,12 +148,52 @@
 $js="
 $(document).ready(function(){
      
-
+  $('#ServiceForm').validate({ 
+        rules: {
+            name: {
+                required: true
+            }
+        },
+        submitHandler: function () {
+            $('#loading').show();
+            $('#submit_member').attr('disabled','disabled');
+            form.submit();
+        }
+    });
     $(document).on('keyup','.qty,.rate',function(){
             calculate();
     });
 
-    function calculate(){
+  
+    $('body').on('click','.deleterow',function(){
+        var rowCount = $('#main_table1 tbody tr.main_tr1').length;
+        if (rowCount>1){
+            if (confirm('Are you sure to remove row ?') == true) {
+                $(this).closest('tr').remove();
+                
+            } 
+        }
+        rename_rows();
+                 calculate();
+    }); 
+
+    function rename_rows(){
+        var j=0;
+        var p=0;    
+        var i=0;
+        $('#main_table1 tbody tr.main_tr1').each(function()
+        { 
+            $(this).find('td:nth-child(1)').html(++p);
+             $(this).find('td:nth-child(2) input.row_material_ids').attr({name:'purchase_order_rows['+i+'][row_material_id]'});
+             $(this).find('td:nth-child(2) input.requisition_slip_row_id').attr({name:'purchase_order_rows['+i+'][requisition_slip_row_id]'});
+             $(this).find('td:nth-child(2) input.requisition_slip_id').attr({name:'purchase_order_rows['+i+'][requisition_slip_id]'});
+              $(this).find('td:nth-child(3) input').attr({name:'purchase_order_rows['+i+'][quantity]'});
+              $(this).find('td:nth-child(4) input').attr({name:'purchase_order_rows['+i+'][rate]'});
+              $(this).find('td:nth-child(5) input').attr({name:'purchase_order_rows['+i+'][amount]'});
+            i++;
+         });
+     }
+  function calculate(){
         var qty=0;
         var rate=0;
         var amount=0;
@@ -171,46 +211,8 @@ $(document).ready(function(){
         $('.grand_total').val(total_amount);
 
     }
-    $('body').on('click','.deleterow',function(){
-        var rowCount = $('#main_table1 tbody tr.main_tr1').length;
-        if (rowCount>1){
-            if (confirm('Are you sure to remove row ?') == true) {
-                $(this).closest('tr').remove();
-                rename_rows();
-                 calculate();
-            } 
-        }
-    }); 
-
-    function rename_rows(){
-        var j=0;
-        var p=0;    
-        var i=0;
-        $('#main_table1 tbody tr.main_tr1').each(function()
-        { 
-            $(this).find('td:nth-child(1)').html(++p);
-             $(this).find('td:nth-child(2) select.selectadd').attr({name:'purchase_order_rows['+i+'][row_material_id]'});
-             $(this).find('td:nth-child(2) select.selectadd').select2();
-              $(this).find('td:nth-child(3) input').attr({name:'purchase_order_rows['+i+'][quantity]'});
-              $(this).find('td:nth-child(4) input').attr({name:'purchase_order_rows['+i+'][rate]'});
-              $(this).find('td:nth-child(5) input').attr({name:'purchase_order_rows['+i+'][amount]'});
-            i++;
-         });
-     }
 
 
-  $('#ServiceForm').validate({ 
-        rules: {
-            name: {
-                required: true
-            }
-        },
-        submitHandler: function () {
-            $('#loading').show();
-            $('#submit_member').attr('disabled','disabled');
-            form.submit();
-        }
-    });
 });
     ";
      $this->Html->scriptBlock($js,['block'=>'block_js']);

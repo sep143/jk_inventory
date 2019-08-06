@@ -43,9 +43,17 @@ $companies->gstin .'</span></td></tr></table>';
                         ?>
                              <?= $this->Form->create($new,['autocomplete'=>'off', 'type'=>'GET']) ?>
                                 <div class="row">
-                                     <div class="col-sm-4">
+                                <div class="col-sm-3">
+                                    <label class="control-label"> Category</label>
+                                        <?php echo $this->Form->control('row_material_category_id',['options' => $RowMaterialCategory,
+                                        'label' => false,'class'=>'selectaddCat select2','id'=>'category_first','empty'=>'Select category','style'=>'width:100%;']);?>
+                                    </div>
+                                     <div class="col-sm-3">
                                         <label class="control-label"> Material</label>
-                                        <?php echo $this->Form->control('row_material_id', ['options' =>$rowMaterials, 'empty' =>'Select Material','label'=>false,'class'=>'select2','style'=>'width:100%;','required','value'=>$this->request->query('row_material_id')]);?>
+                                        <div class="material_ajax">
+                                        <?php echo $this->Form->control('row_material_id', ['options' =>'', 'empty' =>'Select Material','label'=>false,'class'=>'select2','style'=>'width:100%;','required','value'=>$this->request->query('row_material_id')]);?>
+                                        </div>
+                                        
                                     </div>
                                     <div class="col-md-2">
                                         <label class="control-label"> Date From </label>
@@ -87,7 +95,7 @@ $companies->gstin .'</span></td></tr></table>';
                             </tr>
                             <tr>
                                 <th scope="col" rowspan="2"><?= ('Sr.No') ?></th>
-                                <th scope="col" colspan="3"><?= ('Requisition') ?></th>
+                                <th scope="col" colspan="3"><?= ('Issue') ?></th>
                                 <th scope="col" colspan="3"><?= ('Consumption') ?></th>
                                 <th scope="col" colspan="3" ><?= ('Return') ?></th>
                                 <th scope="col" rowspan="2">Remain</th>
@@ -100,9 +108,9 @@ $companies->gstin .'</span></td></tr></table>';
                                 <th></th>
                                 <th>Qty</th>
                                 <th>Reason.</th>
+                                <th>No.</th>
                                 <th>Date</th>
                                 <th>Qty</th>
-                                <th>No.</th>
                                 <th>Inspector</th>
                                 <th>Remarks</th>
                             </tr>
@@ -111,11 +119,12 @@ $companies->gstin .'</span></td></tr></table>';
                             <?php $i=1; $total_in=0; $total_out=0; $total_available=0;
                             foreach($requisitionSlip as $req)
                             {
+                               
                            ?>
                             <tr>
                                  <td><?= $i; $i++;?></td>
-                                 <td><?= $req->requisition_slip->voucher_no?></td>
-                                 <td><?= date('d-m-Y',strtotime($req->requisition_slip->created_on))?></td>
+                                 <td><?= $req->issue_slip->voucher_no?></td>
+                                 <td><?= date('d-m-Y',strtotime($req->issue_slip->created_on))?></td>
                                  <td><?= $req->quantity?></td>
                                  <td>-</td>
                                  <td>-</td>
@@ -132,11 +141,12 @@ $companies->gstin .'</span></td></tr></table>';
                             foreach($row_material_list as $row_material)
                             {
                             if(!empty($row_material->stock_ledgers))
+                            
                              {?>
                             <tr>
                                  <td><?= $i; $i++;?></td>
-                                 <td><?= $req->requisition_slip->voucher_no?></td>
-                                 <td><?= date('d-m-Y',strtotime($req->requisition_slip->created_on))?></td>
+                                 <td><?= $req->issue_slip->voucher_no?></td>
+                                 <td><?= date('d-m-Y',strtotime($req->issue_slip->created_on))?></td>
                                  <td><?= $req->quantity?></td>
                                  <td>-</td>
                                  <td><?php if(!empty($row_material->stock_ledgers[0]->total_out)) { ?>
@@ -157,17 +167,18 @@ $companies->gstin .'</span></td></tr></table>';
                                     
                             ?>
                             <tr>
-                                 <td><?= $i?></td>
-                                 <td><?= $req->requisition_slip->voucher_no?></td>
-                                 <td><?= date('d-m-Y',strtotime($req->requisition_slip->created_on))?></td>
+                                 <td><?= $i;  $i++;?></td>
+                                 <td><?= $req->issue_slip->voucher_no?></td>
+                                 <td><?= date('d-m-Y',strtotime($req->issue_slip->created_on))?></td>
                                  <td><?= $req->quantity?></td>
                                  <td>-</td>
                                  <td><?php if(!empty($row_material->stock_ledgers[0]->total_out)) { ?>
                                         <?php echo @$row_material->stock_ledgers[0]->total_out.' '.$row_material->unit->name; }?></td>
                                  <td>-</td>
+                                 <td><?= $return->return_slip->voucher_no?></td>
                                  <td><?php echo date('d-m-Y',strtotime($return->return_slip->created_on)) ?></td>
                                  <td><?= $return->quantity?></td>
-                                 <td><?= $return->return_slip->voucher_no?></td>
+                                 
                                  <td>
                                  <?php
                                     $minus= $req->quantity-$return->quantity;
@@ -182,9 +193,9 @@ $companies->gstin .'</span></td></tr></table>';
                             {
                             ?>
                             <tr>
-                                 <td><?= $i?></td>
-                                 <td><?= $req->requisition_slip->voucher_no?></td>
-                                 <td><?= date('d-m-Y',strtotime($req->requisition_slip->created_on))?></td>
+                                 <td><?= $i;  $i++;?></td>
+                                 <td><?= $req->issue_slip->voucher_no?></td>
+                                 <td><?= date('d-m-Y',strtotime($req->issue_slip->created_on))?></td>
                                  <td><?= $req->quantity?></td>
                                  <td>-</td>
                                  <td><?php if(!empty($row_material->stock_ledgers[0]->total_out)) { ?>
@@ -213,3 +224,41 @@ $companies->gstin .'</span></td></tr></table>';
 <?= $this->element('datepicker') ?> 
 <?= $this->element('validate') ?> 
 <?php $this->element('excelexport',['table'=>'example1']) ?>
+
+<?php
+$js="
+$(document).ready(function(){
+
+    $(document).on('change','.selectaddCat',function(){
+		//var row_material_category_id=$(this).val();
+		var temp=$(this);
+		var cat_id_add = $(this).val();
+		var url='".$this->Url->build(['controller' => 'RequisitionSlips', 'action' => 'meterialShow'])."';
+        url = url+'/'+cat_id_add; 
+        $.ajax({
+			url:url,
+			type: 'GET'
+		}).done(function(response){
+            $('.material_ajax').html(response);
+            $('#material_ids').select2();
+			
+		}); 
+	});
+
+$('#ServiceForm').validate({ 
+        rules: {
+            row_material_id: {
+                required: true
+            }
+            
+        },
+        submitHandler: function () {
+            $('#loading').show();
+            $('#submit_member').attr('disabled','disabled');
+            form.submit();
+        }
+    });
+});
+    ";
+     $this->Html->scriptBlock($js,['block'=>'block_js']);
+ ?>

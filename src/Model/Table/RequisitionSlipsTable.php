@@ -35,6 +35,7 @@ class RequisitionSlipsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
         $this->belongsTo('Companies');
+        $this->belongsTo('IssueSlips');
         $this->hasMany('RequisitionSlipRows', [
             'foreignKey' => 'requisition_slip_id',
             'joinType' => 'INNER',

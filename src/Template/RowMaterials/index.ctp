@@ -36,9 +36,9 @@
                     <span class="help-block"></span> 
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="control-label"> Opening Balence <span class="required" aria-required="true"> * </span></label>
+                            <label class="control-label"> Opening Balence <span class="" aria-required="true"> * </span></label>
                             <?php echo $this->Form->control('opening_bal',[
-                            'label' => false,'class'=>'form-control ','placeholder'=>'Enter Opening Balence','type'=>'text','required']);?>
+                            'label' => false,'class'=>'form-control ','placeholder'=>'Enter Opening Balence','type'=>'text']);?>
                         </div>
                     </div>
                      <span class="help-block"></span> 

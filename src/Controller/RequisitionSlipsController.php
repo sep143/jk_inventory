@@ -50,14 +50,17 @@ class RequisitionSlipsController extends AppController
             }
 
             if(!empty($row_id)){
-                 $where1['RequisitionSlipRows.row_material_id'] = $row_id;
+                 $where1['IssueSlipRows.row_material_id'] = $row_id;
+                //  $where1['RequisitionSlipRows.row_material_id'] = $row_id;
 
             }
            
         if(!empty($where) || !empty($where1)){    
             
-        $requisitionSlip=$this->RequisitionSlips->RequisitionSlipRows->find()->where($where1)
-        ->contain(['RequisitionSlips','RowMaterials']);
+        $requisitionSlip=$this->RequisitionSlips->IssueSlips->IssueSlipRows->find()->where($where1)
+        ->contain(['IssueSlips','RowMaterials']);
+        // $requisitionSlip=$this->RequisitionSlips->RequisitionSlipRows->find()->where($where1)
+        // ->contain(['RequisitionSlips','RowMaterials']);
         
         foreach($requisitionSlip as $req)
         {
@@ -88,16 +91,19 @@ class RequisitionSlipsController extends AppController
                 }]);
                 
                     $returns=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->ReturnSlipRows->find()->where(['row_material_id'=>$row_material_id])->contain(['ReturnSlips']);
-                           
+                // pr($row_material_list->toArray()); exit;           
        
         }
     }
-        //  
+    $RowMaterialCategory= $this->RequisitionSlips->RequisitionSlipRows->RowMaterials->RowMaterialCategories->find('list',[
+        'keyField' => 'id',
+        'valueField' => 'name',
+   ]);  
         $rowMaterials=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->find('list');
         $companies=$this->RequisitionSlips->Companies->get(1,['contain'=> ['States']]);
         $rowMaterialsName=$this->RequisitionSlips->RequisitionSlipRows->RowMaterials->find()->where(['id'=>$row_id])->first();
-        // pr($rowMaterialsName->toArray()); exit;
-        $this->set(compact('requisitionSlip','row_material_list','rowMaterialsName','returns','rowMaterials','new','url','status','companies'));
+        // pr($RowMaterialCategory->toArray()); exit;
+        $this->set(compact('requisitionSlip','row_material_list','rowMaterialsName','RowMaterialCategory','returns','rowMaterials','new','url','status','companies'));
     }
 
 
